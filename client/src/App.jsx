@@ -5,6 +5,7 @@ import Home from "./pages/Home";
 import Login from "./pages/Login";
 import Register from "./pages/Register";
 import axios from "axios";
+import { Toaster } from "react-hot-toast";
 
 axios.defaults.baseURL = "http://localhost:8000";
 
@@ -27,6 +28,7 @@ axios.interceptors.request.use(
 function App() {
   return (
     <>
+      <Toaster position="bottom-center" toastOptions={{ duration: 5000 }} />
       <NavBar />
       <Routes>
         <Route path="/" element={<Home />} />
