@@ -1,6 +1,7 @@
 const express = require("express");
 const dotenv = require("dotenv").config();
 const { mongoose } = require("mongoose");
+const app = express();
 
 // database connection
 mongoose
@@ -8,7 +9,7 @@ mongoose
   .then(() => console.log("Database connected"))
   .catch((error) => console.error("Database not connected ", error));
 
-const app = express();
+app.use(express.json());
 
 app.use((req, res, next) => {
   console.log(
