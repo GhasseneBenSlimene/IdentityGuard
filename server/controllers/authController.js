@@ -1,4 +1,5 @@
 const User = require("../models/user");
+const { hashPassowrd, comparePassword } = require("../helpers/auth");
 
 const test = (req, res) => {
   res.json("test is working");
@@ -31,16 +32,22 @@ const registerUser = async (req, res) => {
       });
     }
 
+    const hashedPassword = await hashPassowrd(password);
+
     const user = await User.create({
       name,
       email,
-      password,
+      password: hashedPassword,
     });
 
-    return res.json(user);
+    const userResponse = await User.findById(user._id).select("name email");
+
+    return res.json(userResponse);
   } catch (error) {
     console.log(error);
-    return res.status(500).json("Server error, please try again later");
+    return res
+      .status(500)
+      .json({ error: "Server error, please try again later" });
   }
 };
 
