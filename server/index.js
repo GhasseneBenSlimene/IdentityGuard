@@ -1,6 +1,8 @@
 const express = require("express");
 const dotenv = require("dotenv").config();
 const { mongoose } = require("mongoose");
+const cookieParser = require("cookie-parser");
+
 const app = express();
 
 // database connection
@@ -10,6 +12,8 @@ mongoose
   .catch((error) => console.error("Database not connected ", error));
 
 app.use(express.json());
+app.use(cookieParser());
+app.use(express.urlencoded({ extended: false }));
 
 app.use((req, res, next) => {
   console.log(

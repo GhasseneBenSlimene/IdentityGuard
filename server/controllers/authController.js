@@ -1,5 +1,6 @@
 const User = require("../models/user");
 const { hashPassowrd, comparePassword } = require("../helpers/auth");
+const jwt = require("jsonwebtoken");
 
 const test = (req, res) => {
   res.json("test is working");
@@ -13,11 +14,22 @@ const loginUser = async (req, res) => {
       return res.status(400).json({ error: "Password is required" });
     const user = await User.findOne({ email: email });
     if (!user)
-      return res.status(404).json("User not found, Please register first");
+      return res
+        .status(404)
+        .json({ error: "User not found, Please register first" });
     const hashed = user.password;
     const match = await comparePassword(password, hashed);
-    const userResponse = User.findById(user._id).select("name email");
-    if (match) return res.json(user);
+    const userToSign = await User.findById(user._id)
+      .select("name email")
+      .lean();
+    if (match)
+      return jwt.sign(userToSign, process.env.JWT_SECRET, {}, (err, token) => {
+        if (err)
+          res
+            .status(500)
+            .json({ error: "Error signing token, Please try again later" });
+        res.cookie("token", token).json(userToSign);
+      });
     else
       return res
         .status(401)
