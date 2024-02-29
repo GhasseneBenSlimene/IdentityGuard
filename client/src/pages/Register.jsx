@@ -23,7 +23,7 @@ export default function Register() {
         navigate("/login");
       }
     } catch (error) {
-      console.log(`Error: ${error}`);
+      console.log(`Register error: ${error}`);
       if (error.response) toast.error(error.response.data.error);
       else toast.error("server not responding, try again later");
     }
@@ -42,14 +42,14 @@ export default function Register() {
         <input
           type="text"
           placeholder="enter email ..."
-          value={data.email}
+          value={data.email || ""}
           onChange={(e) => setData({ ...data, email: e.target.value })}
         />
         <label>Password</label>
         <input
           type="password"
           placeholder="enter password ..."
-          value={data.password}
+          value={data.password || ""}
           onChange={(e) => setData({ ...data, password: e.target.value })}
         />
         <button type="submit">Submit</button>

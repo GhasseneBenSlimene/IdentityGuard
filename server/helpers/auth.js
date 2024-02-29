@@ -12,7 +12,7 @@ const hashPassowrd = (password) => {
   });
 };
 
-const comparePassword = (password) => {
+const comparePassword = (password, hashed) => {
   return bcrypt.compare(password, hashed);
 };
 
