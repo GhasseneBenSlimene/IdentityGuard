@@ -6,6 +6,7 @@ import Login from "./pages/Login";
 import Register from "./pages/Register";
 import axios from "axios";
 import { Toaster } from "react-hot-toast";
+import { UserContextProvider } from "./context/userContext";
 
 axios.defaults.baseURL = "http://localhost:8000";
 
@@ -27,7 +28,7 @@ axios.interceptors.request.use(
 
 function App() {
   return (
-    <>
+    <UserContextProvider>
       <Toaster position="bottom-center" toastOptions={{ duration: 5000 }} />
       <NavBar />
       <Routes>
@@ -35,7 +36,7 @@ function App() {
         <Route path="/register" element={<Register />} />
         <Route path="/login" element={<Login />} />
       </Routes>
-    </>
+    </UserContextProvider>
   );
 }
 
