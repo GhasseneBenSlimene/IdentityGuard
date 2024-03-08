@@ -5,6 +5,14 @@ const cookieParser = require("cookie-parser");
 
 const app = express();
 
+// log received requests
+app.use((req, res, next) => {
+  console.log(
+    `A ${req.method} request recieved at ${new Date().toISOString()}`
+  );
+  next();
+});
+
 // database connection
 mongoose
   .connect(process.env.MONGO_URL)
@@ -14,13 +22,6 @@ mongoose
 app.use(express.json());
 app.use(cookieParser());
 app.use(express.urlencoded({ extended: false }));
-
-app.use((req, res, next) => {
-  console.log(
-    `A ${req.method} request recieved at ${new Date().toISOString()}`
-  );
-  next();
-});
 
 app.use("/", require("./routes/authRoutes"));
 

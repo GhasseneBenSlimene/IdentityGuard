@@ -17,7 +17,7 @@ export default function Login() {
       else {
         setData({});
         toast.success("You are logged in successfully");
-        navigate("/");
+        navigate("/dashboard");
       }
     } catch (error) {
       console.log(`Login error: ${error}`);
