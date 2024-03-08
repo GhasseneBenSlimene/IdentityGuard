@@ -1,9 +1,11 @@
-import { useState } from "react";
+import { useState, useContext } from "react";
+import { UserContext } from "../../context/userContext";
 import axios from "axios";
 import toast from "react-hot-toast";
 import { useNavigate } from "react-router-dom";
 
 export default function Login() {
+  const { setUser } = useContext(UserContext);
   const navigate = useNavigate();
   const [data, setData] = useState({
     email: "",
@@ -15,6 +17,7 @@ export default function Login() {
       const response = await axios.post("/login", data);
       if (response.data.error) toast.error(response.data.error);
       else {
+        setUser(response.data);
         setData({});
         toast.success("You are logged in successfully");
         navigate("/dashboard");
