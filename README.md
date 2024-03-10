@@ -82,3 +82,26 @@ Après avoir terminé vos modifications et effectué les tests nécessaires, vou
 ```bash
 git push origin ma-nouvelle-branche
 ```
+
+## Synchronisation avec la branche `main`
+
+Pour ajouter les modifications récentes de la branche `main` à votre branche, suivez ces instructions :
+
+1. Assurez-vous d'avoir enregistré votre travail sur votre branche actuelle.
+2. Basculez sur la branche `main` et récupérez les dernières mises à jour :
+
+```bash
+git checkout main
+git pull origin main
+```
+
+3. Revenez à votre branche de travail et intégrez les changements de `main` :
+
+```bash
+git checkout ma-branche-de-travail
+git merge main
+```
+
+4. Si des conflits surviennent, résolvez-les, puis continuez votre travail.
+
+Garder votre branche à jour de cette manière facilitera la fusion finale de vos modifications dans `main`.
