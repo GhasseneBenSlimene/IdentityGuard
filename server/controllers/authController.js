@@ -6,6 +6,14 @@ const test = (req, res) => {
   res.json("test is working");
 };
 
+const logoutUser = (req, res) => {
+  try {
+    res.clearCookie("token").json({ message: "Logged out successfully" });
+  } catch (error) {
+    res.status(500).json({ error: "Server error, please try again later" });
+  }
+};
+
 const loginUser = async (req, res) => {
   try {
     const { email, password } = req.body;
@@ -25,10 +33,10 @@ const loginUser = async (req, res) => {
     if (match)
       return jwt.sign(userToSign, process.env.JWT_SECRET, {}, (err, token) => {
         if (err)
-          res
+          return res
             .status(500)
             .json({ error: "Error signing token, Please try again later" });
-        res.cookie("token", token).json(userToSign);
+        return res.cookie("token", token).json(userToSign);
       });
     else
       return res
@@ -102,4 +110,5 @@ module.exports = {
   registerUser,
   loginUser,
   getProfile,
+  logoutUser,
 };

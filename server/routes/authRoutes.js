@@ -6,6 +6,7 @@ const {
   registerUser,
   loginUser,
   getProfile,
+  logoutUser,
 } = require("../controllers/authController");
 
 // middleware
@@ -20,5 +21,6 @@ router.get("/", test);
 router.post("/register", registerUser);
 router.post("/login", loginUser);
 router.get("/Profile", getProfile);
+router.get("/logout", logoutUser);
 
 module.exports = router;
