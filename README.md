@@ -1,9 +1,5 @@
 # Documentation du Projet IDENTITYGUARD
 
-# IDENTITEGUARD
-
-IDENTITYGUARD est une application composée d'une partie client et d'une partie serveur.
-
 ## Démarrage avec Docker
 
 Pour démarrer l'application à l'aide de Docker, suivez les étapes ci-dessous :
