@@ -1,51 +1,88 @@
 # Documentation du Projet IDENTITYGUARD
 
-## Structure du Projet
+# IDENTITEGUARD
 
-### Frontend
+IDENTITYGUARD est une application composée d'une partie client et d'une partie serveur.
 
-Dans le répertoire `client`, nous avons structuré notre frontend React :
+## Démarrage avec Docker
 
-- `components` : Composants réutilisables tels que `NavBar.jsx`.
-- `context` : Gestion de l'état global avec Context API, comme `userContext.jsx`.
-- `pages` : Modules séparés pour chaque page, comme `Auth`, `Dashboard`, `Home`, qui permettent une collaboration sans conflit.
+Pour démarrer l'application à l'aide de Docker, suivez les étapes ci-dessous :
 
-### Backend
+1. Assurez-vous que [Docker](https://www.docker.com/) est installé sur votre machine.
+2. Ouvrez un terminal et placez-vous à la racine du projet.
+3. Exécutez la commande suivante pour construire et démarrer l'application :
 
-Notre backend, situé dans le répertoire `server`, utilise Node.js et Express.js :
+```bash
+npm run docker:build
+```
 
-- `controllers` : Contient la logique des routeurs Express.js.
-- `models` : Schémas de données pour MongoDB.
-- `routes` : Définitions des itinéraires pour notre API.
+Pour arrêter l'application, utilisez :
 
-## Travailler Avec GitHub
+```bash
+npm run docker:stop
+```
 
-Nous utilisons GitHub pour la collaboration. Pour contribuer :
+Cette méthode assure que l'application fonctionne correctement dans un environnement Dockerisé.
 
-1. **Clonez le Répertoire** : Clonez le projet sur votre machine locale avec `git clone url_du_repo`.
-2. **Installez les Dépendances** : Exécutez `npm install` dans les dossiers `client` et `server` pour installer les dépendances nécessaires.
-3. **Créez une Branche** : Créez votre propre branche avec `git checkout -b nom_de_votre_branche`.
-4. **Apportez des Modifications** : Travaillez sur votre fonctionnalité ou correction.
-5. **Commit et Push** : Faites commit de vos changements avec `git commit` et poussez-les sur GitHub avec `git push origin nom_de_votre_branche`.
-6. **Ouvrez une Pull Request** : Allez sur GitHub pour ouvrir une pull request pour discussion et revue de code.
+## Démarrage sans Docker (local)
 
-### Installation du Projet
+Si vous préférez exécuter l'application localement sans Docker, vous devrez avoir Node.js version `20.11.1`. Vous pouvez installer cette version spécifique depuis le site officiel de Node.js [ici](https://nodejs.org/).
 
-Pour installer le projet après le clonage :
+### Démarrage du Serveur
 
-1. Ouvrez le terminal.
-2. Changez de répertoire vers `client` et `server` avec `cd client` ou `cd server`.
-3. Exécutez `npm install` pour installer les dépendances du projet.
+1. Dans le terminal, allez dans le dossier du serveur :
 
-Assurez-vous d'avoir Node.js installé sur votre machine pour exécuter les commandes npm.
+```bash
+cd server
+```
 
-### Pour les Collaborateurs
+2. Installez les dépendances :
 
-#### Frontend
+```bash
+npm install
+```
 
-- Familiarisez-vous avec les composants fonctionnels React et les hooks
+3. Démarrez le serveur :
 
-#### Backend
+```bash
+npm start
+```
 
-- Maîtrisez les concepts de Node.js et Express.js.
-- Assurez-vous de comprendre les opérations CRUD avec MongoDB.
+### Démarrage du Client
+
+1. Ouvrez un nouveau terminal et allez dans le dossier du client depuis la racine du projet :
+
+```bash
+cd client
+```
+
+2. Installez les dépendances :
+
+```bash
+npm install
+```
+
+3. Démarrez l'application client :
+
+```bash
+npm start
+```
+
+Une fois le serveur et le client lancés, vous pouvez accéder à l'application web via votre navigateur.
+
+## Contribution au projet
+
+Pour contribuer au projet, vous devez être ajouté en tant que collaborateur. Cela vous donnera les permissions nécessaires pour pousser des modifications (`push`) sur les branches de développement.
+
+Une fois que vous êtes collaborateur, assurez-vous de travailler sur une branche distincte pour chaque fonctionnalité ou correctif, et non directement sur la branche `main`.
+
+```bash
+# Créez une nouvelle branche à partir de 'main' et basculez dessus
+git checkout -b ma-nouvelle-branche
+```
+
+Après avoir terminé vos modifications et effectué les tests nécessaires, vous pouvez pousser votre branche sur le dépôt distant :
+
+```bash
+git push origin ma-nouvelle-branche
+```

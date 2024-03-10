@@ -1,0 +1,16 @@
+{
+  "name": "identityguard",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "docker:build": "docker-compose down && docker-compose up --build -d",
+    "docker:start": "docker-compose up -d",
+    "docker:stop": "docker-compose down",
+    "start:client": "cd client && npm start",
+    "start:server": "cd server && npm start"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC"
+}
