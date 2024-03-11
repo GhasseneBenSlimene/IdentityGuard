@@ -48,7 +48,8 @@ async function logoutUser(setUser, navigate) {
 
 function handleAuthError(message, error) {
   console.log(`${message}: ${error}`);
-  if (error.response.data.error) toast.error(error.response.data.error);
+  if (error.response && error.response.data && error.response.data.error)
+    toast.error(error.response.data.error);
   else toast.error("server not responding, try again later");
 }
 
