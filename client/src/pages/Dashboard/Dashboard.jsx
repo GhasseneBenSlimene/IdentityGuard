@@ -1,8 +1,7 @@
 import { useContext, useEffect, useState } from "react";
 import { UserContext } from "../../context/userContext";
-import axios from "axios";
 import { useNavigate } from "react-router-dom";
-import toast from "react-hot-toast";
+import { logoutUser } from "../Auth/utils/auth";
 
 export default function Dashboard() {
   const { setUser } = useContext(UserContext);
@@ -14,39 +13,13 @@ export default function Dashboard() {
 
   if (!user) return <div>Please log in.</div>;
 
-  const logout = async () => {
-    try {
-      const response = await axios.get("/logout");
-      if (response.data.error) toast.error(response.data.error);
-      else {
-        navigate("/login");
-        setUser(null);
-        toast.success("logged out successfully");
-      }
-    } catch (error) {
-      console.log(`Logout error: ${error}`);
-      if (error.response.data.error) toast.error(error.response.data.error);
-      else toast.error("server not responding, try again later");
-    }
-  };
-
-  const redirectToRole = (role) => {
-    // Rediriger vers la page correspondante en fonction du rôle
-    if (role === "prouveur") {
-    } else if (role === "verificateur") {
-    }
-  };
+  const handleLogout = () => logoutUser(setUser, navigate);
 
   return (
     <div>
       <h1>Welcome to your dashboard, {user.name}</h1>
-      <p>Êtes-vous un Prouveur ou un Vérificateur?</p>
-      <button onClick={() => redirectToRole("prouveur")}>Prouveur</button>
-      <button onClick={() => redirectToRole("verificateur")}>
-        Vérificateur
-      </button>
       <br />
-      <button onClick={() => logout()}>Logout</button>
+      <button onClick={() => handleLogout()}>Logout</button>
     </div>
   );
 }

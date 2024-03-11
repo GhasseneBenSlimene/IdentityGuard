@@ -1,7 +1,6 @@
 import { useState } from "react";
-import axios from "axios";
-import toast from "react-hot-toast";
 import { useNavigate } from "react-router-dom";
+import { registerUser } from "./utils/auth";
 
 export default function Register() {
   const navigate = useNavigate();
@@ -11,26 +10,11 @@ export default function Register() {
     password: "",
   });
 
-  // interact with the backend
-  const registerUser = async (e) => {
-    e.preventDefault();
-    try {
-      const response = await axios.post("/register", data);
-      if (response.data.error) toast.error(response.data.error);
-      else {
-        setData({});
-        toast.success("User registered successfully");
-        navigate("/login");
-      }
-    } catch (error) {
-      console.log(`Register error: ${error}`);
-      if (error.response) toast.error(error.response.data.error);
-      else toast.error("server not responding, try again later");
-    }
-  };
+  const handleRegister = (e) => registerUser(e, data, setData, navigate);
+
   return (
     <div>
-      <form onSubmit={registerUser}>
+      <form onSubmit={handleRegister}>
         <label>Name</label>
         <input
           type="text"
