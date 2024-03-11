@@ -3,6 +3,7 @@ const dotenv = require("dotenv").config();
 const { mongoose } = require("mongoose");
 const cookieParser = require("cookie-parser");
 
+
 const app = express();
 
 // log received requests
@@ -24,6 +25,7 @@ app.use(cookieParser());
 app.use(express.urlencoded({ extended: false }));
 
 app.use("/", require("./routes/authRoutes"));
+app.use("/verifiers", require("./routes/verifier.routes"));
 
-const PORT = process.env.PORT || 8000;
+const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => console.log(`Server is running on port ${PORT}`));

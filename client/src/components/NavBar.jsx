@@ -13,6 +13,9 @@ export default function NavBar() {
       <Link to="/login" style={style}>
         Login
       </Link>
+      <Link to="/verifiers" style={style}>
+        Verifier
+      </Link>
     </nav>
   );
 }
