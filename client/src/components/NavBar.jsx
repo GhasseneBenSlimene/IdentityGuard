@@ -1,12 +1,12 @@
 import { Link, NavLink } from "react-router-dom";
 import { useContext } from "react";
 import { UserContext } from "../context/userContext";
+import { logoutUser } from "../pages/Auth/utils/auth";
 
 export default function NavBar() {
-  const { user } = useContext(UserContext);
-  if (user) return null;
+  const { user, setUser } = useContext(UserContext);
 
-  const render = (items) => {
+  const createNavLinks = (items, nave = true, onClick = (e) => {}) => {
     return (
       <nav className="navbar navbar-expand-lg bg-body-tertiary">
         <div className="container-fluid">
@@ -30,8 +30,9 @@ export default function NavBar() {
                 return (
                   <NavLink
                     className="nav-item nav-link"
-                    to={`/${item}`}
+                    to={nave ? `/${item}` : "/"}
                     key={index}
+                    onClick={onClick}
                   >
                     {item}
                   </NavLink>
@@ -44,5 +45,6 @@ export default function NavBar() {
     );
   };
 
-  return render(["Login", "Register"]);
+  if (user) return createNavLinks([]);
+  return createNavLinks(["Login", "Register"]);
 }
