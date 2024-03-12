@@ -44,5 +44,5 @@ export default function NavBar() {
     );
   };
 
-  return render(["Login", "Register"]);
+  return render(["Login", "Register", "Verifiers"]);
 }
