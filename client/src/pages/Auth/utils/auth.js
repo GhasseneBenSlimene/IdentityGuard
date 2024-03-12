@@ -32,14 +32,13 @@ async function loginUser(event, data, setUser, setData, navigate) {
   }
 }
 
-async function logoutUser(setUser, navigate) {
+async function logoutUser(setUser) {
   try {
     const response = await axios.get("/logout");
     if (response.data.error) toast.error(response.data.error);
     else {
       setUser(null);
       toast.success("logged out successfully");
-      navigate("/login");
     }
   } catch (error) {
     handleAuthError("Logout error", error);

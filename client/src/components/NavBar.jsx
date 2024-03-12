@@ -6,7 +6,7 @@ import { logoutUser } from "../pages/Auth/utils/auth";
 export default function NavBar() {
   const { user, setUser } = useContext(UserContext);
 
-  const createNavLinks = (items, nave = true, onClick = (e) => {}) => {
+  const createNavLinks = (items) => {
     return (
       <nav className="navbar navbar-expand-lg bg-body-tertiary">
         <div className="container-fluid">
@@ -26,15 +26,15 @@ export default function NavBar() {
           </button>
           <div className="collapse navbar-collapse" id="navbarNavAltMarkup">
             <div className="navbar-nav">
-              {items.map((item, index) => {
+              {items.map(({ name, path, onClick }, index) => {
                 return (
                   <NavLink
                     className="nav-item nav-link"
-                    to={nave ? `/${item}` : "/"}
+                    to={path}
                     key={index}
                     onClick={onClick}
                   >
-                    {item}
+                    {name}
                   </NavLink>
                 );
               })}
@@ -45,6 +45,16 @@ export default function NavBar() {
     );
   };
 
-  if (user) return createNavLinks([]);
-  return createNavLinks(["Login", "Register", "Verifiers"]);
+  if (user) {
+    return createNavLinks([
+      { name: "Dashboard", path: "/dashboard" },
+      { name: "Logout", path: "/login", onClick: () => logoutUser(setUser) },
+    ]);
+  } else {
+    return createNavLinks([
+      { name: "Login", path: "/login" },
+      { name: "Register", path: "/register" },
+      { name: "Verifier", path: "/verifiers" },
+    ]);
+  }
 }
