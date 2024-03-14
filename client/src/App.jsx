@@ -5,6 +5,8 @@ import Home from "./pages/Home/Home";
 import Login from "./pages/Auth/Login";
 import Register from "./pages/Auth/Register";
 import Dashboard from "./pages/Dashboard/Dashboard";
+import Prouveur from "./pages/Dashboard/Prouveur";
+import Verificateur from "./pages/Dashboard/Verificateur";
 import axios from "axios";
 import { Toaster } from "react-hot-toast";
 import { UserContextProvider } from "./context/userContext";
@@ -37,6 +39,8 @@ function App() {
         <Route path="/register" element={<Register />} />
         <Route path="/login" element={<Login />} />
         <Route path="/dashboard" element={<Dashboard />} />
+        <Route path="/prouveur" element={<Prouveur />} />
+        <Route path="/verificateur" element={<Verificateur />} />
       </Routes>
     </UserContextProvider>
   );

@@ -20,10 +20,8 @@ export default function Dashboard() {
     <div>
       <h1>Welcome to your dashboard, {user.name}</h1>
       <p>Êtes-vous un Prouveur ou un Vérificateur?</p>
-      <button onClick={() => redirectToRole("prouveur")}>Prouveur</button>
-      <button onClick={() => redirectToRole("verificateur")}>
-        Vérificateur
-      </button>
+      <a href="/prouveur">Prouveur</a>
+      <a href="/verificateur">Verificateur</a>
     </div>
   );
 }
