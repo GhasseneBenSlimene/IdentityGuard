@@ -5,6 +5,6 @@ const router = express.Router();
 
 router.post("/", verifierController.createVerifier);
 router.get("/:verifierId", verifierController.checkVerifierExistence);
-router.delete("/:verifierId", verifierController.deleteVerifier); // Ajoutez ":verifierId" pour accepter l'identifiant du vérificateur dans l'URL
-    
+router.delete("/:verifierId", verifierController.deleteVerifier);
+
 module.exports = router;
