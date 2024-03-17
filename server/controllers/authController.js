@@ -116,10 +116,25 @@ const getProfile = (req, res) => {
   } else return res.json(null);
 };
 
+const getUsersInfo = async (req, res) => {
+  const { token } = req.cookies;
+  if (token) {
+    const user = jwt.verify(token, process.env.JWT_SECRET, {});
+    if (user.admin) {
+      const users = await User.find(
+        { status: "Pending" },
+        { email: 1, _id: 0 }
+      ).lean();
+      return res.json(users);
+    }
+  } else return res.json(null);
+};
+
 module.exports = {
   test,
   registerUser,
   loginUser,
   getProfile,
   logoutUser,
+  getUsersInfo,
 };
