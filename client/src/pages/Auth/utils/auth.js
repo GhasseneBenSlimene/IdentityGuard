@@ -3,8 +3,18 @@ import toast from "react-hot-toast";
 
 async function registerUser(event, data, setData, navigate) {
   event.preventDefault();
+  const formData = new FormData();
+  formData.append("name", data.name);
+  formData.append("email", data.email);
+  formData.append("password", data.password);
+  formData.append("image", data.image);
+
   try {
-    const response = await axios.post("/register", data);
+    const response = await axios.post("/register", formData, {
+      headers: {
+        "Content-Type": "multipart/form-data",
+      },
+    });
     if (response.data.error) toast.error(response.data.error);
     else {
       setData({});

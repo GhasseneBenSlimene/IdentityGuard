@@ -1,4 +1,4 @@
-export const Input = ({ type, name, label, value, onChange }) => {
+export const Input = ({ type, name, label, value, onChange, ...rest }) => {
   return (
     <div className="mb-3">
       <label htmlFor={name} className="form-label">
@@ -12,6 +12,7 @@ export const Input = ({ type, name, label, value, onChange }) => {
         value={value || ""}
         onChange={onChange}
         aria-describedby="emailHelp"
+        {...rest}
       />
     </div>
   );

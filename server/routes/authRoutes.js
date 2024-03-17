@@ -1,6 +1,6 @@
 const express = require("express");
 const router = express.Router();
-const cors = require("cors");
+const upload = require("../config/multerConfig");
 const {
   test,
   registerUser,
@@ -10,7 +10,7 @@ const {
 } = require("../controllers/authController");
 
 router.get("/", test);
-router.post("/register", registerUser);
+router.post("/register", upload.single("image"), registerUser);
 router.post("/login", loginUser);
 router.get("/Profile", getProfile);
 router.get("/logout", logoutUser);

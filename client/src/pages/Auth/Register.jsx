@@ -9,12 +9,18 @@ export default function Register() {
     name: "",
     email: "",
     password: "",
+    image: "",
   });
 
   const handleRegister = (e) => registerUser(e, data, setData, navigate);
 
-  const handleChange = (e) =>
-    setData({ ...data, [e.target.name]: e.target.value });
+  const handleChange = (e) => {
+    if (e.target.name === "image") {
+      setData({ ...data, [e.target.name]: e.target.files[0] });
+    } else {
+      setData({ ...data, [e.target.name]: e.target.value });
+    }
+  };
 
   return (
     <div
@@ -41,6 +47,13 @@ export default function Register() {
           name="password"
           label="Password"
           value={data.password}
+          onChange={handleChange}
+        />
+        <Input
+          type="file"
+          name="image"
+          accept="image/*"
+          label="Identity card image"
           onChange={handleChange}
         />
         <button type="submit" className="btn btn-primary">

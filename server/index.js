@@ -3,6 +3,7 @@ const dotenv = require("dotenv").config();
 const { mongoose } = require("mongoose");
 const cookieParser = require("cookie-parser");
 const cors = require("cors");
+const upload = require("./config/multerConfig");
 
 const app = express();
 
@@ -33,6 +34,12 @@ app.use(express.urlencoded({ extended: false }));
 
 app.use("/", require("./routes/authRoutes"));
 app.use("/verifiers", require("./routes/verifier.routes"));
+
+// error handler
+app.use((error, req, res, next) => {
+  console.error(error.stack);
+  res.status(500).send("Something broke!");
+});
 
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, "0.0.0.0", () =>
