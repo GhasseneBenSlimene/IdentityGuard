@@ -8,6 +8,8 @@ const UserSchema = new Schema({
     unique: true,
   },
   password: String,
+  status: String,
+  imagePath: String,
 });
 
 const UserModel = mongoose.model("User", UserSchema);

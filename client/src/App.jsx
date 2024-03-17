@@ -5,6 +5,7 @@ import Home from "./pages/Home/Home";
 import Login from "./pages/Auth/Login";
 import Register from "./pages/Auth/Register";
 import Dashboard from "./pages/Dashboard/Dashboard";
+import AdminDashboard from "./pages/Admin/AdminDashboard";
 import Verifier_page from "./pages/Verifier/Verifier";
 import axios from "axios";
 import { Toaster } from "react-hot-toast";
@@ -39,6 +40,7 @@ function App() {
         <Route path="/login" element={<Login />} />
         <Route path="/dashboard" element={<Dashboard />} />
         <Route path="/verifiers" element={<Verifier_page />} />
+        <Route path="/adminDashboard" element={<AdminDashboard />} />
       </Routes>
     </UserContextProvider>
   );

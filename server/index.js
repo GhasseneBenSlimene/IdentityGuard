@@ -3,7 +3,6 @@ const dotenv = require("dotenv").config();
 const { mongoose } = require("mongoose");
 const cookieParser = require("cookie-parser");
 const cors = require("cors");
-const upload = require("./config/multerConfig");
 
 const app = express();
 

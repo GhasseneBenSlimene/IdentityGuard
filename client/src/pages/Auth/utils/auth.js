@@ -30,12 +30,18 @@ async function loginUser(event, data, setUser, setData, navigate) {
   try {
     event.preventDefault();
     const response = await axios.post("/login", data);
+    // Convert the admin status to a boolean
+    const isAdmin = response.data.admin === "true";
     if (response.data.error) toast.error(response.data.error);
     else {
       setUser(response.data);
       setData({});
       toast.success("You are logged in successfully");
-      navigate("/dashboard");
+      if (isAdmin) {
+        navigate("/adminDashboard");
+      } else {
+        navigate("/dashboard");
+      }
     }
   } catch (error) {
     handleAuthError("Login error", error);
