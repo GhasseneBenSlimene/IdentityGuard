@@ -92,7 +92,7 @@ const registerUser = async (req, res) => {
       email,
       password: hashedPassword,
       status: "Pending",
-      imagePath: file.path,
+      imagePath: file.filename,
     });
 
     const userResponse = await User.findById(user._id).select("name email");

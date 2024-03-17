@@ -1,6 +1,6 @@
 const express = require("express");
 const router = express.Router();
-const { upload, dir } = require("../config/multerConfig");
+const { dir } = require("../config/multerConfig");
 const {
   getUsersInfo,
   verifyAdminSession,
@@ -9,6 +9,6 @@ const {
 //admin
 router.get("/usersInfo", getUsersInfo);
 // router.get("/uploads", verifyAdminSession, express.static("../uploads"));
-router.get("/uploads", express.static(dir));
+router.use("/uploads", verifyAdminSession, express.static(dir));
 
 module.exports = router;

@@ -38,7 +38,7 @@ async function loginUser(event, data, setUser, setData, navigate) {
       setData({});
       toast.success("You are logged in successfully");
       if (isAdmin) {
-        navigate("/adminDashboard");
+        navigate("/admin/dashboard");
       } else {
         navigate("/dashboard");
       }

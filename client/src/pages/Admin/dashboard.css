@@ -1,0 +1,43 @@
+.container {
+  display: grid;
+  grid-template-columns: repeat(
+    auto-fill,
+    minmax(300px, 1fr)
+  ); /* This will create a responsive number of columns */
+  gap: 20px; /* Space between the cards */
+  padding: 20px; /* Padding around the grid */
+  margin: 20px auto; /* Center the grid horizontally */
+  max-width: 1200px; /* Maximum width of the grid */
+}
+
+.card {
+  background: #fff;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  overflow: hidden; /* Ensures the contents fit within the rounded border */
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding-bottom: 20px;
+}
+
+.image {
+  width: 100%; /* Set the width of the image to fill its container */
+  height: auto; /* Set the height to auto to maintain aspect ratio */
+  border-top-left-radius: 8px;
+  border-top-right-radius: 8px;
+  margin-bottom: 5px;
+}
+
+.buttons {
+  width: 90%;
+  display: grid;
+  grid-template-columns: repeat(2, 1fr); /* Creates two columns for buttons */
+  gap: 10px;
+  justify-content: center;
+  align-items: center;
+}
+
+.btn {
+  padding: 10px 20px;
+}
