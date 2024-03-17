@@ -33,6 +33,7 @@ app.use(express.urlencoded({ extended: false }));
 
 app.use("/", require("./routes/authRoutes"));
 app.use("/verifiers", require("./routes/verifier.routes"));
+app.use("/admin", require("./routes/adminRoutes"));
 
 // error handler
 app.use((error, req, res, next) => {

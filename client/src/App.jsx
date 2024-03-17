@@ -7,27 +7,9 @@ import Register from "./pages/Auth/Register";
 import Dashboard from "./pages/Dashboard/Dashboard";
 import AdminDashboard from "./pages/Admin/AdminDashboard";
 import Verifier_page from "./pages/Verifier/Verifier";
-import axios from "axios";
 import { Toaster } from "react-hot-toast";
 import { UserContextProvider } from "./context/userContext";
-
-axios.defaults.baseURL = "http://localhost:5000";
-
-// enable cross-origin cookies
-axios.defaults.withCredentials = true;
-
-//log every request sent
-axios.interceptors.request.use(
-  (request) => {
-    console.log(
-      `Sending request to ${request.url} at ${new Date().toISOString()}`
-    );
-    return request;
-  },
-  (error) => {
-    return Promise.reject(error);
-  }
-);
+import axiosConfig from "./config/axiosConfig";
 
 function App() {
   return (
