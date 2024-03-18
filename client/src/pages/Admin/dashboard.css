@@ -1,4 +1,4 @@
-.container {
+.dashboardContainer {
   display: grid;
   grid-template-columns: repeat(
     auto-fill,
@@ -10,7 +10,7 @@
   max-width: 1200px; /* Maximum width of the grid */
 }
 
-.card {
+.dashboardCard {
   background: #fff;
   border-radius: 8px;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
@@ -21,7 +21,7 @@
   padding-bottom: 20px;
 }
 
-.image {
+.dashboardImage {
   width: 100%; /* Set the width of the image to fill its container */
   height: auto; /* Set the height to auto to maintain aspect ratio */
   border-top-left-radius: 8px;
@@ -29,7 +29,7 @@
   margin-bottom: 5px;
 }
 
-.buttons {
+.dashboardButtons {
   width: 90%;
   display: grid;
   grid-template-columns: repeat(2, 1fr); /* Creates two columns for buttons */
@@ -38,6 +38,6 @@
   align-items: center;
 }
 
-.btn {
+.dashboardBtn {
   padding: 10px 20px;
 }

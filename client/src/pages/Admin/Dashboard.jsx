@@ -38,13 +38,13 @@ export default function AdminDashboard() {
 
   return (
     <>
-      <div className="container">
+      <div className="container dashboardContainer">
         {users.map((user) => (
-          <div className="card" key={user.email}>
+          <div className="dashboardCard" key={user.email}>
             <img
               src={`${axios.defaults.baseURL}/admin/uploads/${user.imagePath}`}
               alt={user.email}
-              className="image"
+              className="dashboardImage"
             />
             <h6>{user.email}</h6>
             <div className="form-floating mb-3 mt-2">
@@ -59,11 +59,11 @@ export default function AdminDashboard() {
               />
               <label htmlFor={`age-${user.email}`}>Age</label>
             </div>
-            <div className="buttons">
-              <button type="submit" className="btn btn-primary">
+            <div className="buttons dashboardButtons">
+              <button type="submit" className="btn btn-primary dashboardBtn">
                 Accept
               </button>
-              <button type="submit" className="btn btn-danger">
+              <button type="submit" className="btn btn-danger dashboardBtn">
                 Reject
               </button>
             </div>

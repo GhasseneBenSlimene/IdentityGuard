@@ -44,8 +44,12 @@ export default function NavBar() {
       </nav>
     );
   };
-
-  if (user) {
+  if (user && user.admin) {
+    return createNavLinks([
+      { name: "Dashboard", path: "admin/dashboard" },
+      { name: "Logout", path: "/login", onClick: () => logoutUser(setUser) },
+    ]);
+  } else if (user) {
     return createNavLinks([
       { name: "Dashboard", path: "/dashboard" },
       { name: "Logout", path: "/login", onClick: () => logoutUser(setUser) },
