@@ -34,6 +34,13 @@ export default function AdminDashboard() {
     );
   };
 
+  const sendAge = async (age, email) => {
+    const response = await axios.post("/admin/accept", {
+      age: age,
+      email: email,
+    });
+  };
+
   if (loading) return <h1>Loading...</h1>;
 
   return (
@@ -49,18 +56,23 @@ export default function AdminDashboard() {
             <h6>{user.email}</h6>
             <div className="form-floating mb-3 mt-2">
               <input
-                type="number"
+                type="date"
                 value={user.age}
                 onChange={(e) => handleAgeChange(user.email, e.target.value)}
                 className="form-control"
                 id={`age-${user.email}`}
                 name="age"
-                placeholder="Age"
               />
               <label htmlFor={`age-${user.email}`}>Age</label>
             </div>
             <div className="buttons dashboardButtons">
-              <button type="submit" className="btn btn-primary dashboardBtn">
+              <button
+                type="submit"
+                className="btn btn-primary dashboardBtn"
+                onClick={() => {
+                  sendAge(user.age, user.email);
+                }}
+              >
                 Accept
               </button>
               <button type="submit" className="btn btn-danger dashboardBtn">

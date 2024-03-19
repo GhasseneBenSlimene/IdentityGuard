@@ -27,7 +27,14 @@ const verifyAdminSession = (req, res, next) => {
   } else res.status(401).json({ error: "Unauthorized" });
 };
 
+const acceptUser = (req, res, next) => {
+  const { email, age } = req.body;
+  // const proof = ZKP(age);
+  // const N_transaction=BC(proof);
+};
+
 module.exports = {
   getUsersInfo,
   verifyAdminSession,
+  acceptUser,
 };

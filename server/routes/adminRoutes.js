@@ -4,11 +4,12 @@ const { dir } = require("../config/multerConfig");
 const {
   getUsersInfo,
   verifyAdminSession,
+  acceptUser,
 } = require("../controllers/adminController");
 
 //admin
 router.get("/usersInfo", getUsersInfo);
-// router.get("/uploads", verifyAdminSession, express.static("../uploads"));
 router.use("/uploads", verifyAdminSession, express.static(dir));
+router.post("/accept", acceptUser);
 
 module.exports = router;
