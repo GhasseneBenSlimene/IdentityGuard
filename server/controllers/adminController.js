@@ -1,5 +1,6 @@
 const User = require("../models/user");
 const jwt = require("jsonwebtoken");
+const { deleteFile, dir } = require("../config/fileHandler");
 
 const getUsersInfo = async (req, res) => {
   const { token } = req.cookies;
@@ -44,27 +45,36 @@ const acceptUser = (req, res, next) => {
 };
 
 const refuseUser = async (req, res) => {
+  const session = await User.startSession(); // Used to delete operations on db if file is not deleted
+  session.startTransaction();
   try {
     const { email, status } = req.body;
-    console.log("email: ", email, "status: ", status);
     if (status === "Pending") {
       const newStatus = "Refused";
       const user = await User.findOneAndUpdate(
         { email: email },
         { $set: { status: newStatus } }
       );
+      deleteFile(`${dir}\\${user.imagePath}`);
+      await session.commitTransaction();
       res.json({
         user: user,
         message: "User status has been successfully updated to 'Refused'.",
       });
     } else {
+      await session.abortTransaction();
       res.status(400).json({ error: "User is not in Pending state" });
     }
   } catch (error) {
     console.log("Error in refuseUser: ", error);
+    await session.abortTransaction();
     res
       .status(500)
       .json({ error: "refuse user error, please try again later." });
+  } finally {
+    session
+      .endSession()
+      .catch((err) => console.error("Error ending session: ", err));
   }
 };
 

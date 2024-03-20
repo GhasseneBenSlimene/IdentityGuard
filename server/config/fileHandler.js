@@ -10,6 +10,16 @@ if (!fs.existsSync(dir)) {
   fs.mkdirSync(dir, { recursive: true });
 }
 
+const deleteFile = (dir) => {
+  try {
+    fs.unlinkSync(dir);
+    console.log("File deleted!");
+  } catch (error) {
+    console.error("Error deleting file: ", error);
+    throw error; // Propagate up the call stack
+  }
+};
+
 const storage = multer.diskStorage({
   destination: function (req, file, cb) {
     // Utiliser le chemin absolu pour la destination
@@ -32,4 +42,4 @@ const upload = multer({
   },
 });
 
-module.exports = { upload, dir };
+module.exports = { upload, dir, deleteFile };

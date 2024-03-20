@@ -1,6 +1,6 @@
 const express = require("express");
 const router = express.Router();
-const { upload, dir } = require("../config/multerConfig");
+const { upload } = require("../config/fileHandler");
 const {
   test,
   registerUser,

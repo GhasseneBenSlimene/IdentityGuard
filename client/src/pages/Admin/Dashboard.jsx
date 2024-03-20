@@ -52,7 +52,7 @@ export default function AdminDashboard() {
       setUsers(newUsers);
       toast.success(response.data.message);
     } catch (error) {
-      handleError(error);
+      handleError("sendRefuse error: ", error);
     }
     setIsSending(false);
   };
