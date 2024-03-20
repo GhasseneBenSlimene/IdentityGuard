@@ -1,5 +1,6 @@
 import axios from "axios";
 import toast from "react-hot-toast";
+import handleError from "../../tools";
 
 async function registerUser(event, data, setData, navigate) {
   event.preventDefault();
@@ -22,7 +23,7 @@ async function registerUser(event, data, setData, navigate) {
       navigate("/login");
     }
   } catch (error) {
-    handleAuthError("Register error", error);
+    handleError("Register error", error);
   }
 }
 
@@ -44,7 +45,7 @@ async function loginUser(event, data, setUser, setData, navigate) {
       }
     }
   } catch (error) {
-    handleAuthError("Login error", error);
+    handleError("Login error", error);
   }
 }
 
@@ -57,15 +58,8 @@ async function logoutUser(setUser) {
       toast.success("logged out successfully");
     }
   } catch (error) {
-    handleAuthError("Logout error", error);
+    handleError("Logout error", error);
   }
-}
-
-function handleAuthError(message, error) {
-  console.log(`${message}: ${error}`);
-  if (error.response && error.response.data && error.response.data.error)
-    toast.error(error.response.data.error);
-  else toast.error("server not responding, try again later");
 }
 
 export { loginUser, registerUser, logoutUser };

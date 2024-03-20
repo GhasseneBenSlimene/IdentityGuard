@@ -2,21 +2,24 @@ import { useContext, useEffect, useState } from "react";
 import { UserContext } from "../../context/userContext";
 import axios from "axios";
 import "./dashboard.css";
+import handleError from "../tools";
+import toast from "react-hot-toast";
 
 export default function AdminDashboard() {
   const [users, setUsers] = useState([]);
-  const { user, loading } = useContext(UserContext);
+  const [isSending, setIsSending] = useState(false);
+  const { loading } = useContext(UserContext);
 
   useEffect(() => {
     const fetchUsers = async () => {
       try {
         const response = await axios.get("/admin/usersInfo");
-        // Initialize age for each user
-        const usersWithAge = response.data.map((user) => ({
+        // Initialize dateOfBirth for each user
+        const usersWithDateOfBirth = response.data.map((user) => ({
           ...user,
-          age: "",
+          dateOfBirth: "",
         }));
-        setUsers(usersWithAge);
+        setUsers(usersWithDateOfBirth);
       } catch (error) {
         console.error("Failed to fetch users:", error);
       }
@@ -25,20 +28,33 @@ export default function AdminDashboard() {
     fetchUsers();
   }, []);
 
-  // Function to handle age change for each user
-  const handleAgeChange = (email, newAge) => {
+  // Function to handle dateOfBirth change for each user
+  const handleDateOfBirthChange = (email, newDateOfBirth) => {
     setUsers(
       users.map((user) =>
-        user.email === email ? { ...user, age: newAge } : user
+        user.email === email ? { ...user, dateOfBirth: newDateOfBirth } : user
       )
     );
   };
 
-  const sendAge = async (age, email) => {
-    const response = await axios.post("/admin/accept", {
-      age: age,
-      email: email,
-    });
+  const sendAge = async (user) => {
+    await axios.post("/admin/accept", user);
+  };
+
+  const sendRefuse = async (user) => {
+    setIsSending(true);
+    try {
+      const response = await axios.post("/admin/refuse", user);
+      console.log(response.data.user.email, user.email);
+      const newUsers = users.filter((user) => {
+        return response.data.user.email !== user.email;
+      });
+      setUsers(newUsers);
+      toast.success(response.data.message);
+    } catch (error) {
+      handleError(error);
+    }
+    setIsSending(false);
   };
 
   if (loading) return <h1>Loading...</h1>;
@@ -57,25 +73,34 @@ export default function AdminDashboard() {
             <div className="form-floating mb-3 mt-2">
               <input
                 type="date"
-                value={user.age}
-                onChange={(e) => handleAgeChange(user.email, e.target.value)}
+                value={user.dateOfBirth}
+                onChange={(e) =>
+                  handleDateOfBirthChange(user.email, e.target.value)
+                }
                 className="form-control"
-                id={`age-${user.email}`}
-                name="age"
+                id={`dateOfBirth-${user.email}`}
+                name="dateOfBirth"
               />
-              <label htmlFor={`age-${user.email}`}>Age</label>
+              <label htmlFor={`dateOfBirth-${user.email}`}>Date of Birth</label>
             </div>
             <div className="buttons dashboardButtons">
               <button
                 type="submit"
                 className="btn btn-primary dashboardBtn"
                 onClick={() => {
-                  sendAge(user.age, user.email);
+                  sendAge(user);
                 }}
               >
                 Accept
               </button>
-              <button type="submit" className="btn btn-danger dashboardBtn">
+              <button
+                type="submit"
+                className="btn btn-danger dashboardBtn"
+                onClick={() => {
+                  sendRefuse(user);
+                }}
+                disabled={isSending}
+              >
                 Reject
               </button>
             </div>
