@@ -7,7 +7,9 @@ const getUsersInfo = async (req, res) => {
   if (token) {
     const user = jwt.verify(token, process.env.JWT_SECRET, {});
     if (user.admin) {
-      const users = await User.find({ status: "Pending" }).lean();
+      const users = await User.find({ status: "Pending" })
+        .select("-password")
+        .lean();
       return res.json(users);
     }
   } else return res.json(null);
@@ -54,7 +56,9 @@ const refuseUser = async (req, res) => {
       const user = await User.findOneAndUpdate(
         { email: email },
         { $set: { status: newStatus } }
-      );
+      )
+        .select("-password")
+        .lean();
       deleteFile(`${dir}\\${user.imagePath}`);
       await session.commitTransaction();
       res.json({

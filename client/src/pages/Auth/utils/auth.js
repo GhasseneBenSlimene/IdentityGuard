@@ -2,7 +2,7 @@ import axios from "axios";
 import toast from "react-hot-toast";
 import handleError from "../../tools";
 
-async function registerUser(event, data, setData, navigate) {
+async function registerUser(event, data) {
   event.preventDefault();
   const formData = new FormData();
   formData.append("name", data.name);
@@ -16,14 +16,16 @@ async function registerUser(event, data, setData, navigate) {
         "Content-Type": "multipart/form-data",
       },
     });
-    if (response.data.error) toast.error(response.data.error);
-    else {
-      setData({});
+    if (response.data.error) {
+      toast.error(response.data.error);
+      return false;
+    } else {
       toast.success("User registered successfully");
-      navigate("/login");
+      return true;
     }
   } catch (error) {
     handleError("Register error", error);
+    return false;
   }
 }
 
