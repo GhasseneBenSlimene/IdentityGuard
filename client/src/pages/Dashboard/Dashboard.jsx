@@ -5,7 +5,7 @@ import axios from "axios";
 
 import io from 'socket.io-client';
 
-const socket = io('http://localhost:6000'); // l'URL du serveur
+var socket = io('http://localhost:5173'); // l'URL socket serveur
 
 export default function Dashboard() {
   const { user } = useContext(UserContext);
@@ -29,15 +29,23 @@ export default function Dashboard() {
 
   const handleSaveIdentifier = async () => {
     localStorage.setItem('identifier', identifier);
-    socket.emit('envoyerMessage',identifier);
+    socket.emit('envoyerMessage', identifier); // Envoi de l'identifiant via Socket.IO
     sendUserDataToVerifier(user.email, 123);
   };
   
-
   useEffect(() => {
+    socket.on('connect', () => {
+      console.log('Connected to Socket.IO server');
+    });
+
     socket.on('recevoirMessage', identifier => {
       console.log('Message du serveur:', identifier);
     });
+
+    socket.on('disconnect', () => {
+      console.log('Disconnected from Socket.IO server');
+    });
+
     if (isCameraAvailable) {
       // Initialiser la caméra et le scanner QR
       const videoElement = document.getElementById('camera');
@@ -92,25 +100,21 @@ export default function Dashboard() {
     }
   }, [isCameraAvailable]);
 
+  const sendUserDataToVerifier = async (data, verifierId) => {
+    try {
+      // Envoi des données à l'URL du vérificateur
+      const response = await axios.post(`/verifiers/send-data/${verifierId}`, {
+        data: data
+      });
 
-const sendUserDataToVerifier = async (data, verifierId) => {
-  try {
-    // Envoi des données à l'URL du vérificateur
-    const response = await axios.post(`/verifiers/send-data/${verifierId}`, {
-      data: data
-    });
+      // Vérifier la réponse et effectuer des actions en conséquence
+      console.log('Réponse du vérificateur:', response.data);
+      // Insérez ici toute logique supplémentaire en fonction de la réponse
 
-    // Vérifier la réponse et effectuer des actions en conséquence
-    console.log('Réponse du vérificateur:', response.data);
-    // Insérez ici toute logique supplémentaire en fonction de la réponse
-
-  } catch (error) {
-    console.error('Erreur lors de l\'envoi des données au vérificateur:', error);
-  }
-
-}
-
-
+    } catch (error) {
+      console.error('Erreur lors de l\'envoi des données au vérificateur:', error);
+    }
+  };
 
   return (
     <div>
@@ -139,5 +143,4 @@ const sendUserDataToVerifier = async (data, verifierId) => {
       {scannedQrCode && <p>QR Code scanné : {scannedQrCode}</p>}
     </div>
   );
-  
 }

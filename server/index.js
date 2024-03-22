@@ -1,19 +1,17 @@
 const express = require("express");
 const dotenv = require("dotenv").config();
-const { mongoose } = require("mongoose");
+const mongoose = require("mongoose");
 const cookieParser = require("cookie-parser");
 const cors = require("cors");
-const http = require('http');
 
-const {Server} = require('socket.io');
-const app = express();
-const server = http.createServer(app);
-const io = new Server(server);
+const app = require('express')();
+const server = require('http').createServer(app);
+const io = require('socket.io')(server);
 
 // log received requests
 app.use((req, res, next) => {
   console.log(
-    `A ${req.method} request recieved at ${new Date().toISOString()}`
+    `A ${req.method} request received at ${new Date().toISOString()}`
   );
   next();
 });
@@ -28,7 +26,7 @@ mongoose
 app.use(
   cors({
     credentials: true,
-    origin: "http://localhost:5173",
+    origin: "http://localhost:5173", // Autoriser les requêtes depuis ce domaine
   })
 );
 app.use(express.json());
@@ -45,22 +43,29 @@ app.use((error, req, res, next) => {
   res.status(500).send("Something broke!");
 });
 
-const PORT = process.env.PORT || 5000; //5000
-app.listen(PORT, "0.0.0.0", () =>
-  console.log(`Server is running on port ${PORT}`)
-);
+app.use((req, res, next) => {
+  res.setHeader('Access-Control-Allow-Origin', 'http://localhost:5173');
+  res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS, PUT, PATCH, DELETE');
+  res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization');
+  res.setHeader('Access-Control-Allow-Credentials', true);
+  next();
+});
 
-io.on('connection', (socket) => {
+
+// Gestion des connexions Socket.IO
+io.on('connection', function(socket){
   console.log('Un utilisateur est connecté');
 
-  socket.on('disconnect', () => {
+  socket.on('disconnect', function() {
     console.log('Utilisateur déconnecté');
   });
 
-  socket.on('envoyerMessage', (msg) => {
-    // Vous pouvez ici filtrer le message ou enregistrer dans une base de données si nécessaire
-    io.emit('recevoirMessage', msg); // Cette ligne renvoie le message à tous les utilisateurs connectés
+  socket.on('message', function(msg) {
+    console.log('message reçu ' + msg);
   });
 });
 
-server.listen(6000, () => console.log('Serveur démarré sur le port ${6000}'));
+const PORT = process.env.PORT || 8000; // Port du serveur principal
+server.listen(PORT, "0.0.0.0", () => {
+  console.log(`Server is running on port ${PORT}`);
+});

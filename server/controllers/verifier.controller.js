@@ -37,3 +37,13 @@ exports.deleteVerifier = async (req, res) => {
     res.status(500).json({ error: "Erreur lors de la suppression du vérificateur" });
   }
 };
+
+
+exports.sendUserDataToVerifier = async (req, res) => {
+  try {
+      // Logique pour envoyer les données utilisateur au vérificateur
+  } catch (error) {
+      console.error("Erreur lors de l'envoi des données utilisateur au vérificateur :", error);
+      res.status(500).json({ message: "Erreur lors de l'envoi des données utilisateur au vérificateur" });
+  }
+};
