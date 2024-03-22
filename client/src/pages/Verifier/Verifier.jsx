@@ -35,7 +35,7 @@ function VerifierPage() {
 
   useEffect(() => {
     // Connexion Socket.IO
-    const newSocket = io('http://localhost:5173');
+    const newSocket = io('http://localhost:3000');
     setSocket(newSocket);
 
     // Nettoyer la connexion lorsque le composant est démonté
