@@ -4,6 +4,7 @@ const mongoose = require("mongoose");
 const cookieParser = require("cookie-parser");
 const cors = require("cors");
 const http = require('http'); // Importer le module 'http'
+const socketManager = require('./sockets/socketManager'); // Importer le gestionnaire de sockets
 
 const app = express(); // Utilisation de la fonction express pour créer l'application
 
@@ -58,17 +59,5 @@ const io = require('socket.io')(3000, {
   }
 });
 
-io.on('connection', function(socket){
-  console.log('Client Connected');
-  
-  // Gestion des messages
-  socket.on('message', function(data){
-    socket.broadcast.emit('server_message', data);
-    socket.emit('server_message', data);
-  });
-  
-  // Gestion des déconnexions
-  socket.on('disconnect', function(){
-    console.log('Client Disconnected.');
-  });
-});
+// Utiliser le gestionnaire de sockets
+socketManager(io);

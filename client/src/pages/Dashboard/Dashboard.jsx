@@ -1,11 +1,9 @@
-import { useContext, useState, useEffect } from "react";
+import React, { useContext, useState, useEffect, useRef } from "react";
 import { UserContext } from "../../context/userContext";
 import jsQR from 'jsqr';
 import axios from "axios";
-
 import io from 'socket.io-client';
-
-var socket = io('http://localhost:5173'); // l'URL socket serveur
+import "./Dashboard.css"; // Import de la feuille de style CSS
 
 export default function Dashboard() {
   const { user } = useContext(UserContext);
@@ -13,42 +11,55 @@ export default function Dashboard() {
   const [scannedQrCode, setScannedQrCode] = useState("");
   const [identifier, setIdentifier] = useState("");
   const [method, setMethod] = useState(null);
-  
+  const [socket, setSocket] = useState(null);
+  const [showAgeProofOptions, setShowAgeProofOptions] = useState(false);
+  const videoRef = useRef(null);
+
   const handleProofOfAge = () => {
-    // Demander l'accès à la caméra
-    navigator.mediaDevices.getUserMedia({ video: true })
-      .then(() => {
-        setIsCameraAvailable(true);
-        setMethod('camera');
-      })
-      .catch(() => {
-        setIsCameraAvailable(false);
-        setMethod('input');
-      });
+    setShowAgeProofOptions(true);
   };
 
   const handleSaveIdentifier = async () => {
-    localStorage.setItem('identifier', identifier);
-    socket.emit('envoyerMessage', identifier); // Envoi de l'identifiant via Socket.IO
-    sendUserDataToVerifier(user.email, 123);
-  };
+    if (socket && identifier) {
+        try {
+            const response = await axios.get(`/verifiers/${identifier}`);
+            const exists = response.data.exists;
+            if (exists) {
+
+              const data = {
+                    identifier: identifier,
+                    email: user.email
+                };
+                socket.emit('message', data);
+                console.log("envoyé");
+            } else {
+                console.log("Identifiant incorrect, veuillez recommencer");
+            }
+        } catch (error) {
+            // Gérer les erreurs de la requête Axios
+            console.error("Erreur lors de la requête Axios :", error);
+        }
+    } else if (!identifier) {
+        console.log("pas d'identifiant");
+    }
+};
+
+
   
   useEffect(() => {
-    socket.on('connect', () => {
-      console.log('Connected to Socket.IO server');
-    });
+    const newSocket = io('http://localhost:3000');
+    setSocket(newSocket);
 
-    socket.on('recevoirMessage', identifier => {
-      console.log('Message du serveur:', identifier);
-    });
+    return () => {
+      if (newSocket) {
+        newSocket.disconnect();
+      }
+    };
+  }, []);
 
-    socket.on('disconnect', () => {
-      console.log('Disconnected from Socket.IO server');
-    });
-
-    if (isCameraAvailable) {
-      // Initialiser la caméra et le scanner QR
-      const videoElement = document.getElementById('camera');
+  useEffect(() => {
+    if (isCameraAvailable && method === 'camera') {
+      const videoElement = videoRef.current;
       let isVideoCaptured = false;
       const canvas = document.createElement('canvas');
       const context = canvas.getContext('2d');
@@ -85,6 +96,7 @@ export default function Dashboard() {
         })
         .catch(function(error) {
           console.error('Erreur lors de l\'accès à la caméra :', error);
+          setIsCameraAvailable(false); // Mettre à jour l'état de la disponibilité de la caméra
         });
 
       function stopVideoCapture() {
@@ -98,49 +110,51 @@ export default function Dashboard() {
         videoElement.srcObject = null;
       }
     }
-  }, [isCameraAvailable]);
-
-  const sendUserDataToVerifier = async (data, verifierId) => {
-    try {
-      // Envoi des données à l'URL du vérificateur
-      const response = await axios.post(`/verifiers/send-data/${verifierId}`, {
-        data: data
-      });
-
-      // Vérifier la réponse et effectuer des actions en conséquence
-      console.log('Réponse du vérificateur:', response.data);
-      // Insérez ici toute logique supplémentaire en fonction de la réponse
-
-    } catch (error) {
-      console.error('Erreur lors de l\'envoi des données au vérificateur:', error);
-    }
-  };
+  }, [isCameraAvailable, method]);
 
   return (
-    <div>
+    <div className="container">
       <h1>Welcome to your dashboard, {user && user.name}</h1>
-      <button onClick={handleProofOfAge}>Prouver son âge</button>
-      {isCameraAvailable && (
-        <div>
-          <h2>Scanner de QR Code</h2>
-          <video id="camera" autoPlay></video>
+      {!showAgeProofOptions && (
+        <button onClick={handleProofOfAge}>Prouver son âge</button>
+      )}
+      {showAgeProofOptions && (
+        <div className="button-group">
+          <button onClick={() => {
+            setMethod('camera');
+            setIsCameraAvailable(true);
+          }}>Scanner le QR code</button>
+          <button onClick={() => {
+            setMethod('input');
+          }}>Entrer le QR code</button>
         </div>
       )}
-      {!isCameraAvailable && method === 'input' && (
-        <div>
-          <h2>Identifiant pour prouver l'âge</h2>
-          <input 
-            type="text" 
-            value={identifier} 
-            onChange={(e) => setIdentifier(e.target.value)} 
-            placeholder="Entrer l'identifiant" 
-          />
+      {method === 'input' && (
+        <div className="input-container">
+          <div className="input-group">
+            <input 
+              type="text" 
+              value={identifier} 
+              onChange={(e) => setIdentifier(e.target.value)} 
+              placeholder="Entrer l'identifiant" 
+              className="identifier-input" // Ajoutez la classe CSS pour le style de l'input
+            />
+            {identifier && method === 'input' && <button onClick={handleSaveIdentifier} className="send-button">Envoyer</button>}
+          </div>
         </div>
       )}
-      {method && (
-        <button onClick={handleSaveIdentifier}>Envoyer</button>
+      {method === 'camera' && scannedQrCode && (
+        <button onClick={handleSaveIdentifier} className="send-button">Envoyer</button>
       )}
-      {scannedQrCode && <p>QR Code scanné : {scannedQrCode}</p>}
+      {(!isCameraAvailable && method === 'camera') && (
+        <p className="error-message">Veuillez autoriser l'accès à la caméra ou choisir une autre méthode.</p>
+      )}
+      {isCameraAvailable && method === 'camera' && (
+        <div className="camera-container">
+          <video ref={videoRef} autoPlay></video>
+        </div>
+      )}
+      {method === 'camera' && scannedQrCode && <p>QR Code scanné : {scannedQrCode}</p>}
     </div>
   );
 }
