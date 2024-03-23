@@ -14,9 +14,15 @@ const deleteFile = (dir) => {
   try {
     fs.unlinkSync(dir);
     console.log("File deleted!");
+    return true; // File existed and was deleted
   } catch (error) {
-    console.error("Error deleting file: ", error);
-    throw error; // Propagate up the call stack
+    if (error.code === "ENOENT") {
+      console.error("File does not exist: ", dir);
+      return false; // File does not exist
+    } else {
+      console.error("Error deleting file: ", error);
+      throw error; // Propagate other errors up the call stack
+    }
   }
 };
 

@@ -1,6 +1,6 @@
 const express = require("express");
 const router = express.Router();
-const { upload } = require("../config/fileHandler");
+const { upload } = require("../handlers/fileHandler");
 const {
   test,
   registerUser,

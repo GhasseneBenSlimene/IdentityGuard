@@ -1,6 +1,6 @@
 const express = require("express");
 const router = express.Router();
-const { dir } = require("../config/fileHandler");
+const { dir } = require("../handlers/fileHandler");
 const {
   getUsersInfo,
   verifyAdminSession,

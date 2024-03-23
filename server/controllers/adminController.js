@@ -1,6 +1,7 @@
 const User = require("../models/user");
 const jwt = require("jsonwebtoken");
-const { deleteFile, dir } = require("../config/fileHandler");
+const ZKP = require("../ZKP/generate_proof");
+const { deleteFile, dir } = require("../handlers/fileHandler");
 
 const getUsersInfo = async (req, res) => {
   const { token } = req.cookies;
@@ -40,7 +41,7 @@ const acceptUser = (req, res, next) => {
     const { email, dateOfBirth } = req.body;
     const status = "Accepted";
     console.log("dateOfBirth: ", dateOfBirth);
-    // const proof = ZKP(age);
+    // const proof = ZKP(dateOfBirth);
     // const N_transaction=BC(proof);
     res.json({});
   } catch (error) {}
