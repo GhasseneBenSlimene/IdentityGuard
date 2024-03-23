@@ -1,14 +1,18 @@
 import { useContext, useEffect, useState } from "react";
 import { UserContext } from "../../context/userContext";
+import { useNavigate } from "react-router-dom";
+import { logoutUser } from "../Auth/utils/auth";
 import jsQR from "jsqr";
 
 export default function Dashboard() {
-  const { user } = useContext(UserContext);
+  const { user, loading } = useContext(UserContext);
   const [isCameraAvailable, setIsCameraAvailable] = useState(false);
   const [scannedQrCode, setScannedQrCode] = useState("");
   const [identifier, setIdentifier] = useState("");
   const [method, setMethod] = useState(null);
 
+  if (loading) return <h1>Loading...</h1>;
+  if (!user) return <div>Please log in.</div>;
   const handleProofOfAge = () => {
     // Demander l'accès à la caméra
     navigator.mediaDevices
