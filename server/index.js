@@ -24,6 +24,7 @@ app.use(cookieParser());
 app.use(express.urlencoded({ extended: false }));
 
 app.use("/", require("./routes/authRoutes"));
+app.use("/", require("./routes/contractRoutes"));
 
 const PORT = process.env.PORT || 8000;
 app.listen(PORT, () => console.log(`Server is running on port ${PORT}`));
