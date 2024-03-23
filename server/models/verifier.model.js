@@ -11,19 +11,14 @@ const verifierSchema = mongoose.Schema(
       type: Date,
       expires: 3600,
       default: Date.now,
-      require: true,
+      required: true,
     },
   }
 );
 
-
-const generateUniqueId = () => {
-  return uuid.v4().replace(/-/g, "").substr(0, 12); // Génère un identifiant de 12 caractères
-};
-
-// Avant de sauvegarder un vérificateur, génère un identifiant unique
+// Génèrer un identifiant unique
 verifierSchema.pre("save", function(next) {
-  this.verifierId = generateUniqueId();
+  this.verifierId = uuid.v4().replace(/-/g, "").substr(0, 12);
   next();
 });
 
