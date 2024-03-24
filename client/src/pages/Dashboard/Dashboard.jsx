@@ -3,7 +3,7 @@ import { UserContext } from "../../context/userContext";
 import jsQR from "jsqr";
 import axios from "axios";
 import io from "socket.io-client";
-import "./Dashboard.css"; // Import de la feuille de style CSS
+import "./Dashboard.css";
 
 export default function Dashboard() {
   const { user } = useContext(UserContext);
@@ -13,6 +13,9 @@ export default function Dashboard() {
   const [method, setMethod] = useState(null);
   const [socket, setSocket] = useState(null);
   const [showAgeProofOptions, setShowAgeProofOptions] = useState(false);
+  const [isVideoCaptured, setIsVideoCaptured] = useState(false);
+  const [errorMessage, setErrorMessage] = useState("");
+
   const videoRef = useRef(null);
 
   const handleProofOfAge = () => {
@@ -31,8 +34,10 @@ export default function Dashboard() {
           };
           socket.emit("message", data);
           console.log("envoyé");
+          setErrorMessage("Données envoyées");
+          stopVideoCapture(); // Arrêtez la capture vidéo ici
         } else {
-          console.log("Identifiant incorrect, veuillez recommencer");
+          setErrorMessage("Identifiant incorrect, veuillez recommencer");
         }
       } catch (error) {
         // Gérer les erreurs de la requête Axios
@@ -44,10 +49,25 @@ export default function Dashboard() {
   };
 
   useEffect(() => {
+    if (scannedQrCode && method === "camera") {
+      setIdentifier(scannedQrCode);
+    }
+
+    return () => {
+      stopVideoCapture();
+    };
+
+  }, [scannedQrCode, method]);
+
+  useEffect(() => {
     const newSocket = io(
       import.meta.env.VITE_API_URL + import.meta.env.VITE_SOCKET_PORT
     );
     setSocket(newSocket);
+
+    newSocket.on("error_message", (message) => {
+      setErrorMessage(message);
+    });
 
     return () => {
       if (newSocket) {
@@ -59,7 +79,6 @@ export default function Dashboard() {
   useEffect(() => {
     if (isCameraAvailable && method === "camera") {
       const videoElement = videoRef.current;
-      let isVideoCaptured = false;
       const canvas = document.createElement("canvas");
       const context = canvas.getContext("2d");
 
@@ -85,7 +104,6 @@ export default function Dashboard() {
         if (code) {
           console.log("QR Code détecté :", code.data);
           setScannedQrCode(code.data);
-          stopVideoCapture();
         }
       }
 
@@ -96,21 +114,24 @@ export default function Dashboard() {
         })
         .catch(function (error) {
           console.error("Erreur lors de l'accès à la caméra :", error);
-          setIsCameraAvailable(false); // Mettre à jour l'état de la disponibilité de la caméra
+          setIsCameraAvailable(false);
         });
-
-      function stopVideoCapture() {
-        if (isVideoCaptured) return;
-        isVideoCaptured = true;
-        const stream = videoElement.srcObject;
-        const tracks = stream.getTracks();
-        tracks.forEach(function (track) {
-          track.stop();
-        });
-        videoElement.srcObject = null;
-      }
     }
   }, [isCameraAvailable, method]);
+
+  function stopVideoCapture() {
+    const videoElement = videoRef.current;
+    if (videoElement && videoElement.srcObject) {
+      const stream = videoElement.srcObject;
+      setIsVideoCaptured(true);
+      const tracks = stream.getTracks();
+      tracks.forEach(function (track) {
+        track.stop();
+      });
+      videoElement.srcObject = null;
+    }
+  }
+  
 
   return (
     <div className="container">
@@ -119,23 +140,30 @@ export default function Dashboard() {
         <button onClick={handleProofOfAge}>Prouver son âge</button>
       )}
       {showAgeProofOptions && (
-        <div className="button-group">
-          <button
-            onClick={() => {
-              setMethod("camera");
-              setIsCameraAvailable(true);
-            }}
-          >
-            Scanner le QR code
-          </button>
-          <button
-            onClick={() => {
-              setMethod("input");
-            }}
-          >
-            Entrer le QR code
-          </button>
-        </div>
+        <>
+          <div className="button-group">
+            <button
+              onClick={() => {
+                setMethod("camera");
+                setIsCameraAvailable(true);
+                setScannedQrCode("");
+                setIsVideoCaptured(false);
+              }}
+            >
+              Scanner le QR code
+            </button>
+            <button
+              onClick={() => {
+                setMethod("input");
+              }}
+            >
+              Entrer le QR code
+            </button>
+          </div>
+          <div id="message" className="error-message">
+            <p>{errorMessage}</p>
+          </div>
+        </>
       )}
       {method === "input" && (
         <div className="input-container">
@@ -145,7 +173,7 @@ export default function Dashboard() {
               value={identifier}
               onChange={(e) => setIdentifier(e.target.value)}
               placeholder="Entrer l'identifiant"
-              className="identifier-input" // Ajoutez la classe CSS pour le style de l'input
+              className="identifier-input"
             />
             {identifier && method === "input" && (
               <button onClick={handleSaveIdentifier} className="send-button">

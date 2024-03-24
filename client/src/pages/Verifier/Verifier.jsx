@@ -4,9 +4,21 @@ import "./style.css";
 import axios from "axios";
 import io from "socket.io-client";
 
+function Proof({ proof }) {
+  return (
+    <div>
+      <h2>Preuve reçue :</h2>
+      <p>{proof}</p>
+    </div>
+  );
+}
+
 function VerifierPage() {
   const [verifierId, setVerifierId] = useState("");
   const [socket, setSocket] = useState(null);
+  const [expirationStatus, setExpirationStatus] = useState(false);
+  const [previousVerifierId, setPreviousVerifierId] = useState(null);
+  const [proof, setProof] = useState(null); // État pour stocker la preuve reçue
 
   useEffect(() => {
     const interval = setInterval(() => {
@@ -21,10 +33,12 @@ function VerifierPage() {
           // Le vérificateur n'est pas expiré, afficher l'identifiant et générer le QR code
           setVerifierId(storedVerifierId);
           generateQR(storedVerifierId);
+          setExpirationStatus(false);
         } else {
           // Le vérificateur est expiré, afficher le message d'expiration et effacer le QR code
           setVerifierId("Identifiant expiré, veuillez en créer un nouveau");
           generateQR(null);
+          setExpirationStatus(true);
         }
       }
     }, 1000); // Vérifier toutes les secondes
@@ -34,13 +48,23 @@ function VerifierPage() {
   }, []);
 
   useEffect(() => {
-    // Connexion Socket.IO
-    const newSocket = io("http://localhost:3000");
-    setSocket(newSocket);
+    if (!expirationStatus && verifierId) {
+      // Connexion Socket.IO
+      const newSocket = io("http://localhost:3000");
+      setSocket(newSocket);
+      newSocket.emit("joinVerifier", verifierId);
+      console.log("rejoindre socket : " + verifierId);
 
-    // Nettoyer la connexion lorsque le composant est démonté
-    return () => newSocket.disconnect();
-  }, []);
+      // Écouter l'événement 'proof' émis par le serveur et mettre à jour l'état de la preuve
+      newSocket.on("proof", (email) => {
+        console.log("Preuve reçue pour l'email :", email);
+        setProof(email);
+      });
+
+      // Nettoyer la connexion lorsque le composant est démonté
+      return () => newSocket.disconnect();
+    }
+  }, [verifierId, expirationStatus]);
 
   const generateNewVerifier = async () => {
     try {
@@ -63,6 +87,15 @@ function VerifierPage() {
       setVerifierId(newVerifierId);
       localStorage.setItem("verifierId", newVerifierId);
       localStorage.setItem("expiration", expiration);
+
+      if (socket) {
+        // Quitter la socket précédente si elle existe
+        if (previousVerifierId) {
+          socket.emit("quitVerifier", previousVerifierId);
+          console.log("quitter socket : " + previousVerifierId);
+        }
+      }
+      setPreviousVerifierId(newVerifierId);
 
       // Générer le QR code
       generateQR(newVerifierId);
@@ -110,6 +143,7 @@ function VerifierPage() {
       <h1>Générateur de QR Code</h1>
       <p id="verifierId">Identifiant du vérificateur : {verifierId}</p>
       <canvas id="qrcode"></canvas>
+      {proof && <Proof proof={proof} />} {/* Rendre le composant Proof si une preuve est reçue */}
       <button onClick={generateNewVerifier}>Générer un nouveau QR Code</button>
     </div>
   );
