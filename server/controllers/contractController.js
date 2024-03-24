@@ -31,6 +31,8 @@ const deploy_contract = async (req, res) => {
             gas: '4700000',
         });
 
+        console.log("test");
+
         // Envoyer la réponse avec l'adresse du contrat déployé
         res.json({ contractAddress: deployedContract.contractAddress });
     } catch (error) {
