@@ -8,12 +8,12 @@ import "./Dashboard.css";
 export default function Dashboard() {
   const { user } = useContext(UserContext);
   const [isCameraAvailable, setIsCameraAvailable] = useState(false);
+  const [isCameraBlocked, setIsCameraBlocked] = useState(false);
   const [scannedQrCode, setScannedQrCode] = useState("");
   const [identifier, setIdentifier] = useState("");
   const [method, setMethod] = useState(null);
   const [socket, setSocket] = useState(null);
   const [showAgeProofOptions, setShowAgeProofOptions] = useState(false);
-  const [isVideoCaptured, setIsVideoCaptured] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
 
   const videoRef = useRef(null);
@@ -35,12 +35,11 @@ export default function Dashboard() {
           socket.emit("message", data);
           console.log("envoyé");
           setErrorMessage("Données envoyées");
-          stopVideoCapture(); // Arrêtez la capture vidéo ici
+          setScannedQrCode("");
         } else {
           setErrorMessage("Identifiant incorrect, veuillez recommencer");
         }
       } catch (error) {
-        // Gérer les erreurs de la requête Axios
         console.error("Erreur lors de la requête Axios :", error);
       }
     } else if (!identifier) {
@@ -52,11 +51,6 @@ export default function Dashboard() {
     if (scannedQrCode && method === "camera") {
       setIdentifier(scannedQrCode);
     }
-
-    return () => {
-      stopVideoCapture();
-    };
-
   }, [scannedQrCode, method]);
 
   useEffect(() => {
@@ -77,7 +71,7 @@ export default function Dashboard() {
   }, []);
 
   useEffect(() => {
-    if (isCameraAvailable && method === "camera") {
+    if (isCameraAvailable && method === "camera" && !isCameraBlocked) {
       const videoElement = videoRef.current;
       const canvas = document.createElement("canvas");
       const context = canvas.getContext("2d");
@@ -92,9 +86,7 @@ export default function Dashboard() {
           context.drawImage(videoElement, 0, 0, width, height);
           const imageData = context.getImageData(0, 0, width, height);
           decodeQRCode(imageData, width, height);
-          if (!isVideoCaptured) {
-            requestAnimationFrame(scanFrame);
-          }
+          requestAnimationFrame(scanFrame);
         };
         scanFrame();
       });
@@ -115,15 +107,29 @@ export default function Dashboard() {
         .catch(function (error) {
           console.error("Erreur lors de l'accès à la caméra :", error);
           setIsCameraAvailable(false);
+          setIsCameraBlocked(true);
         });
     }
-  }, [isCameraAvailable, method]);
+  }, [isCameraAvailable, method, isCameraBlocked]);
 
+  useEffect(() => {
+    const handleBeforeUnload = (event) => {
+      event.preventDefault();
+      event.returnValue = ""; // Message facultatif, certains navigateurs le montrent
+    };
+  
+    window.addEventListener("beforeunload", handleBeforeUnload);
+  
+    return () => {
+      window.removeEventListener("beforeunload", handleBeforeUnload);
+      stopVideoCapture();
+    };
+  }, []);
+  
   function stopVideoCapture() {
     const videoElement = videoRef.current;
     if (videoElement && videoElement.srcObject) {
       const stream = videoElement.srcObject;
-      setIsVideoCaptured(true);
       const tracks = stream.getTracks();
       tracks.forEach(function (track) {
         track.stop();
@@ -147,7 +153,6 @@ export default function Dashboard() {
                 setMethod("camera");
                 setIsCameraAvailable(true);
                 setScannedQrCode("");
-                setIsVideoCaptured(false);
               }}
             >
               Scanner le QR code
@@ -199,8 +204,8 @@ export default function Dashboard() {
         </div>
       )}
       {method === "camera" && scannedQrCode && (
-        <p>QR Code scanné : {scannedQrCode}</p>
-      )}
-    </div>
-  );
-}
+        <p> QR Code scanné : {scannedQrCode}</p>
+        )}
+      </div>
+    );
+  }
