@@ -4,7 +4,7 @@
 
 Pour démarrer l'application à l'aide de Docker, suivez les étapes ci-dessous :
 
-1. Assurez-vous que [Docker](https://www.docker.com/) est installé sur votre machine.
+1. Assurez-vous que [Docker](https://www.docker.com/get-started/) est installé sur votre machine.
 2. Ouvrez un terminal et placez-vous à la racine du projet.
 3. Exécutez la commande suivante pour construire et démarrer l'application :
 

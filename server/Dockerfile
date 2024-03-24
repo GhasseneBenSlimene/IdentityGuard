@@ -7,6 +7,9 @@ WORKDIR /usr/src/app
 # Copiez les fichiers package.json et package-lock.json
 COPY package*.json ./
 
+# Clear the npm cache
+RUN npm cache clean --force
+
 # Installez les dépendances de l'application
 RUN npm install
 
