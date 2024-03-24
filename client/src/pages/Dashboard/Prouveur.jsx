@@ -1,10 +1,8 @@
 import React, { useState } from 'react';
 import axios from 'axios';
 import toast from 'react-hot-toast';
-import { useNavigate } from 'react-router-dom';
 
 export default function Prouveur() {
-  const navigate = useNavigate();
   const [data, setData] = useState({
     accountNumber: '',
     age: '',
@@ -25,7 +23,6 @@ export default function Prouveur() {
           age: '',
         });
         toast.success('Contrat déployé avec succès !');
-        navigate('/dashboard'); // Rediriger vers la page de tableau de bord après le déploiement réussi
       }
     } catch (error) {
       console.error('Erreur lors du déploiement du contrat :', error);
