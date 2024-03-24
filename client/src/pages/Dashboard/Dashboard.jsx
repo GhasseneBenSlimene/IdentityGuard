@@ -137,7 +137,7 @@ export default function Dashboard() {
     <div className="container">
       <h1>Welcome to your dashboard, {user && user.name}</h1>
       {!showAgeProofOptions && (
-        <button onClick={handleProofOfAge}>Prouver son âge</button>
+        <button onClick={handleProofOfAge}>Prouver mon âge</button>
       )}
       {showAgeProofOptions && (
         <>

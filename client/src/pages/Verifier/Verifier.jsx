@@ -15,6 +15,7 @@ function Proof({ proof }) {
 
 function VerifierPage() {
   const [verifierId, setVerifierId] = useState("");
+  const [viewVerifierId, setViewVerifierId] = useState("Veuillez générer un nouvel identifiant.");
   const [socket, setSocket] = useState(null);
   const [expirationStatus, setExpirationStatus] = useState(false);
   const [previousVerifierId, setPreviousVerifierId] = useState(null);
@@ -36,9 +37,10 @@ function VerifierPage() {
           setExpirationStatus(false);
         } else {
           // Le vérificateur est expiré, afficher le message d'expiration et effacer le QR code
-          setVerifierId("Identifiant expiré, veuillez en créer un nouveau");
-          generateQR(null);
+          setVerifierId("");
+          generateQR(null); // Supprimer le QR code
           setExpirationStatus(true);
+          setViewVerifierId("Veuillez générer un nouvel identifiant.");
         }
       }
     }, 1000); // Vérifier toutes les secondes
@@ -68,6 +70,7 @@ function VerifierPage() {
 
   const generateNewVerifier = async () => {
     try {
+      setProof(null);
       // Supprimer l'ancien vérificateur
       await removeVerifier();
 
@@ -85,6 +88,7 @@ function VerifierPage() {
       const expiration = verifierData.expiration;
 
       setVerifierId(newVerifierId);
+      setViewVerifierId("Identifiant : " + newVerifierId);
       localStorage.setItem("verifierId", newVerifierId);
       localStorage.setItem("expiration", expiration);
 
@@ -128,11 +132,18 @@ function VerifierPage() {
   const generateQR = (verifierId) => {
     try {
       var qrCodeCanvas = document.getElementById("qrcode");
-      new QRious({
-        element: qrCodeCanvas,
-        value: verifierId,
-        size: 300,
-      });
+
+      if (verifierId != null) {
+        new QRious({
+          element: qrCodeCanvas,
+          value: verifierId,
+          size: 300,
+        });
+      } else {
+        // Si le vérificateur est expiré ou null, supprimer le QR code
+        var context = qrCodeCanvas.getContext("2d");
+        context.clearRect(0, 0, qrCodeCanvas.width, qrCodeCanvas.height);
+      }
     } catch (error) {
       console.error("Erreur lors de la génération du QR code:", error);
     }
@@ -141,7 +152,7 @@ function VerifierPage() {
   return (
     <div className="container">
       <h1>Générateur de QR Code</h1>
-      <p id="verifierId">Identifiant du vérificateur : {verifierId}</p>
+      <p id="verifierId">{viewVerifierId}</p>
       <canvas id="qrcode"></canvas>
       {proof && <Proof proof={proof} />} {/* Rendre le composant Proof si une preuve est reçue */}
       <button onClick={generateNewVerifier}>Générer un nouveau QR Code</button>
