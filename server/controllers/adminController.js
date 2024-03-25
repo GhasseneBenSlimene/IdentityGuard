@@ -54,12 +54,7 @@ const refuseUser = async (req, res) => {
     const { email, status } = req.body;
     if (status === "Pending") {
       const newStatus = "Refused";
-      const user = await User.findOneAndUpdate(
-        { email: email },
-        { $set: { status: newStatus } }
-      )
-        .select("-password")
-        .lean();
+      const user = await findUserAndUpdateState(email, newStatus);
       deleteFile(`${dir}\\${user.imagePath}`);
       await session.commitTransaction();
       res.json({
@@ -82,6 +77,15 @@ const refuseUser = async (req, res) => {
       .catch((err) => console.error("Error ending session: ", err));
   }
 };
+
+async function findUserAndUpdateState(email, newStatus) {
+  return await User.findOneAndUpdate(
+    { email: email },
+    { $set: { status: newStatus } }
+  )
+    .select("email name status")
+    .lean();
+}
 
 module.exports = {
   getUsersInfo,

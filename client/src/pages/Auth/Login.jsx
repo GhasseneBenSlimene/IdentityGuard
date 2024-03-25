@@ -11,18 +11,34 @@ export default function Login() {
     email: "",
     password: "",
   });
+  const [isPending, setIsPending] = useState(false);
+  const [isRefused, setIsRefused] = useState(false);
+  const [isAccepted, setIsAccepted] = useState(false);
 
   const handleChange = (e) =>
     setData({ ...data, [e.target.name]: e.target.value });
 
-  const handleLogin = (e) => loginUser(e, data, setUser, setData, navigate);
+  const handleLogin = async (e) => {
+    e.preventDefault();
+    const { isLoggedIn, isAdmin, user } = await loginUser(data);
+    if (isLoggedIn) {
+      setData({});
+      setUser(user);
+      if (isAdmin) {
+        navigate("/admin/dashboard");
+      } else {
+        if (user.status == "Pending") {
+          setIsPending(true);
+        } else {
+          navigate("/dashboard");
+        }
+      }
+    }
+  };
 
   return (
-    <div
-      className="d-flex justify-content-center align-items-center"
-      style={{ height: "50vh" }}
-    >
-      <form className="col-5" onSubmit={handleLogin}>
+    <div className="d-flex justify-content-center align-items-center">
+      <form className="col-5 mt-5" onSubmit={handleLogin}>
         <Input
           type="email"
           name="email"
@@ -40,6 +56,14 @@ export default function Login() {
         <button type="submit" className="btn btn-primary">
           Submit
         </button>
+        {isPending && (
+          <div className="alert alert-warning mt-3" role="alert">
+            Your account is pending approval.
+            <br /> An administrator will review your information shortly. Once
+            approved, you can then log in to your account. Thank you for your
+            patience.
+          </div>
+        )}
       </form>
     </div>
   );

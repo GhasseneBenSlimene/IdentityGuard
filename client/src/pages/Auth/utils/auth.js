@@ -29,25 +29,24 @@ async function registerUser(event, data) {
   }
 }
 
-async function loginUser(event, data, setUser, setData, navigate) {
+async function loginUser(data) {
+  let isLoggedIn = false;
   try {
-    event.preventDefault();
     const response = await axios.post("/login", data);
-    // Convert the admin status to a boolean
-    const isAdmin = response.data.admin === "true";
-    if (response.data.error) toast.error(response.data.error);
-    else {
-      setUser(response.data);
-      setData({});
+    if (response.data.error) {
+      toast.error(response.data.error);
+      return { isLoggedIn };
+    } else if (response.data) {
+      isLoggedIn = true;
+      const user = response.data;
+      // Convert the admin status to a boolean
+      const isAdmin = response.data.admin === "true";
       toast.success("You are logged in successfully");
-      if (isAdmin) {
-        navigate("/admin/dashboard");
-      } else {
-        navigate("/dashboard");
-      }
+      return { isLoggedIn, isAdmin, user };
     }
   } catch (error) {
     handleError("Login error", error);
+    return { isLoggedIn };
   }
 }
 

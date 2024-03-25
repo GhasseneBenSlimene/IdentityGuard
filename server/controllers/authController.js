@@ -27,9 +27,7 @@ const loginUser = async (req, res) => {
         .json({ error: "User not found, Please register first" });
     const hashed = user.password;
     const match = await comparePassword(password, hashed);
-    const userToSign = await User.findById(user._id)
-      .select("name email admin")
-      .lean();
+    const userToSign = await findUser(email);
     if (!userToSign.admin) {
       delete userToSign.admin;
     }
@@ -115,6 +113,12 @@ const getProfile = (req, res) => {
     });
   } else return res.json(null);
 };
+
+async function findUser(email) {
+  return await User.findOne({ email: email })
+    .select("email name status admin")
+    .lean();
+}
 
 module.exports = {
   test,
