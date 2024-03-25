@@ -1,58 +1,75 @@
 import { useState } from "react";
-import axios from "axios";
-import toast from "react-hot-toast";
 import { useNavigate } from "react-router-dom";
+import { registerUser } from "./utils/auth";
+import { Input } from "../../components/Input";
 
 export default function Register() {
   const navigate = useNavigate();
+  const [isRegistered, setIsRegistered] = useState(false);
   const [data, setData] = useState({
     name: "",
     email: "",
     password: "",
+    image: "",
   });
 
-  // interact with the backend
-  const registerUser = async (e) => {
-    e.preventDefault();
-    try {
-      const response = await axios.post("/register", data);
-      if (response.data.error) toast.error(response.data.error);
-      else {
-        setData({});
-        toast.success("User registered successfully");
-        navigate("/login");
-      }
-    } catch (error) {
-      console.log(`Register error: ${error}`);
-      if (error.response) toast.error(error.response.data.error);
-      else toast.error("server not responding, try again later");
+  const handleRegister = async (e) => {
+    if (await registerUser(e, data)) {
+      setData({});
+      setIsRegistered(true);
     }
   };
+
+  const handleChange = (e) => {
+    if (e.target.name === "image") {
+      setData({ ...data, [e.target.name]: e.target.files[0] });
+    } else {
+      setData({ ...data, [e.target.name]: e.target.value });
+    }
+  };
+
   return (
-    <div>
-      <form onSubmit={registerUser}>
-        <label>Name</label>
-        <input
+    <div className="d-flex justify-content-center align-items-center">
+      <form className="col-5" onSubmit={handleRegister}>
+        <Input
           type="text"
-          placeholder="enter name ..."
+          name="name"
+          label="Name"
           value={data.name}
-          onChange={(e) => setData({ ...data, name: e.target.value })}
+          onChange={handleChange}
         />
-        <label>Email</label>
-        <input
-          type="text"
-          placeholder="enter email ..."
-          value={data.email || ""}
-          onChange={(e) => setData({ ...data, email: e.target.value })}
+        <Input
+          type="email"
+          name="email"
+          label="Email address"
+          value={data.email}
+          onChange={handleChange}
         />
-        <label>Password</label>
-        <input
+        <Input
           type="password"
-          placeholder="enter password ..."
-          value={data.password || ""}
-          onChange={(e) => setData({ ...data, password: e.target.value })}
+          name="password"
+          label="Password"
+          value={data.password}
+          onChange={handleChange}
         />
-        <button type="submit">Submit</button>
+        <Input
+          type="file"
+          name="image"
+          accept="image/*"
+          label="Identity card image"
+          onChange={handleChange}
+        />
+        <button type="submit" className="btn btn-primary">
+          Submit
+        </button>
+        {isRegistered && (
+          <div className="alert alert-success mt-3" role="alert">
+            Congratulations on successfully registering!
+            <br /> An administrator will review your information shortly. Once
+            approved, you can then log in to your account. Thank you for your
+            patience.
+          </div>
+        )}
       </form>
     </div>
   );

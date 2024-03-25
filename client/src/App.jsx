@@ -5,29 +5,17 @@ import Home from "./pages/Home/Home";
 import Login from "./pages/Auth/Login";
 import Register from "./pages/Auth/Register";
 import Dashboard from "./pages/Dashboard/Dashboard";
+<<<<<<< HEAD
 import Prouveur from "./pages/Dashboard/Prouveur";
 import Verificateur from "./pages/Dashboard/Verificateur";
 import axios from "axios";
+=======
+import AdminDashboard from "./pages/Admin/Dashboard";
+import Verifier_page from "./pages/Verifier/Verifier";
+>>>>>>> main
 import { Toaster } from "react-hot-toast";
 import { UserContextProvider } from "./context/userContext";
-
-axios.defaults.baseURL = "http://localhost:8000";
-
-// enable cross-origin cookies
-axios.defaults.withCredentials = true;
-
-//log every request sent
-axios.interceptors.request.use(
-  (request) => {
-    console.log(
-      `Sending request to ${request.url} at ${new Date().toISOString()}`
-    );
-    return request;
-  },
-  (error) => {
-    return Promise.reject(error);
-  }
-);
+import axiosConfig from "./config/axiosConfig";
 
 function App() {
   return (
@@ -39,8 +27,13 @@ function App() {
         <Route path="/register" element={<Register />} />
         <Route path="/login" element={<Login />} />
         <Route path="/dashboard" element={<Dashboard />} />
+<<<<<<< HEAD
         <Route path="/prouveur" element={<Prouveur />} />
         <Route path="/verificateur" element={<Verificateur />} />
+=======
+        <Route path="/verifiers" element={<Verifier_page />} />
+        <Route path="/admin/dashboard" element={<AdminDashboard />} />
+>>>>>>> main
       </Routes>
     </UserContextProvider>
   );

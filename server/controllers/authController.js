@@ -6,6 +6,14 @@ const test = (req, res) => {
   res.json("test is working");
 };
 
+const logoutUser = (req, res) => {
+  try {
+    res.clearCookie("token").json({ message: "Logged out successfully" });
+  } catch (error) {
+    res.status(500).json({ error: "Server error, please try again later" });
+  }
+};
+
 const loginUser = async (req, res) => {
   try {
     const { email, password } = req.body;
@@ -20,15 +28,18 @@ const loginUser = async (req, res) => {
     const hashed = user.password;
     const match = await comparePassword(password, hashed);
     const userToSign = await User.findById(user._id)
-      .select("name email")
+      .select("name email admin")
       .lean();
+    if (!userToSign.admin) {
+      delete userToSign.admin;
+    }
     if (match)
       return jwt.sign(userToSign, process.env.JWT_SECRET, {}, (err, token) => {
         if (err)
-          res
+          return res
             .status(500)
             .json({ error: "Error signing token, Please try again later" });
-        res.cookie("token", token).json(userToSign);
+        return res.cookie("token", token).json(userToSign);
       });
     else
       return res
@@ -45,6 +56,7 @@ const loginUser = async (req, res) => {
 const registerUser = async (req, res) => {
   try {
     const { name, email, password } = req.body;
+    const file = req.file;
     // valdiate the user input and return a json response
     if (!name) {
       return res.status(400).json({
@@ -61,6 +73,11 @@ const registerUser = async (req, res) => {
         error: "Email is required",
       });
     }
+    if (!file) {
+      return res.status(400).json({
+        error: "Image is required",
+      });
+    }
     const exist = await User.findOne({ email }); //find the first document if it exists
     if (exist) {
       return res.status(409).json({
@@ -74,6 +91,8 @@ const registerUser = async (req, res) => {
       name,
       email,
       password: hashedPassword,
+      status: "Pending",
+      imagePath: file.filename,
     });
 
     const userResponse = await User.findById(user._id).select("name email");
@@ -92,9 +111,9 @@ const getProfile = (req, res) => {
   if (token) {
     jwt.verify(token, process.env.JWT_SECRET, {}, (err, user) => {
       if (err) throw err;
-      res.json(user);
+      return res.json(user);
     });
-  } else res.json(null);
+  } else return res.json(null);
 };
 
 module.exports = {
@@ -102,4 +121,5 @@ module.exports = {
   registerUser,
   loginUser,
   getProfile,
+  logoutUser,
 };

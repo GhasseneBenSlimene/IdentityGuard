@@ -1,8 +1,8 @@
 import { useState, useContext } from "react";
 import { UserContext } from "../../context/userContext";
-import axios from "axios";
-import toast from "react-hot-toast";
 import { useNavigate } from "react-router-dom";
+import { loginUser } from "./utils/auth";
+import { Input } from "../../components/Input";
 
 export default function Login() {
   const { setUser } = useContext(UserContext);
@@ -11,41 +11,35 @@ export default function Login() {
     email: "",
     password: "",
   });
-  const loginUser = async (e) => {
-    try {
-      e.preventDefault();
-      const response = await axios.post("/login", data);
-      if (response.data.error) toast.error(response.data.error);
-      else {
-        setUser(response.data);
-        setData({});
-        toast.success("You are logged in successfully");
-        navigate("/dashboard");
-      }
-    } catch (error) {
-      console.log(`Login error: ${error}`);
-      if (error.response.data.error) toast.error(error.response.data.error);
-      else toast.error("server not responding, try again later");
-    }
-  };
+
+  const handleChange = (e) =>
+    setData({ ...data, [e.target.name]: e.target.value });
+
+  const handleLogin = (e) => loginUser(e, data, setUser, setData, navigate);
+
   return (
-    <div>
-      <form onSubmit={loginUser}>
-        <label>Email</label>
-        <input
-          type="text"
-          placeholder="enter email ..."
-          value={data.email || ""}
-          onChange={(e) => setData({ ...data, email: e.target.value })}
+    <div
+      className="d-flex justify-content-center align-items-center"
+      style={{ height: "50vh" }}
+    >
+      <form className="col-5" onSubmit={handleLogin}>
+        <Input
+          type="email"
+          name="email"
+          label="Email address"
+          value={data.email}
+          onChange={handleChange}
         />
-        <label>Password</label>
-        <input
+        <Input
           type="password"
-          placeholder="enter password ..."
-          value={data.password || ""}
-          onChange={(e) => setData({ ...data, password: e.target.value })}
+          name="password"
+          label="Password"
+          value={data.password}
+          onChange={handleChange}
         />
-        <button type="submit">Login</button>
+        <button type="submit" className="btn btn-primary">
+          Submit
+        </button>
       </form>
     </div>
   );

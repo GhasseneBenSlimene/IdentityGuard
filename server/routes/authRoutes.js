@@ -1,24 +1,18 @@
 const express = require("express");
 const router = express.Router();
-const cors = require("cors");
+const { upload } = require("../handlers/fileHandler");
 const {
   test,
   registerUser,
   loginUser,
   getProfile,
+  logoutUser,
 } = require("../controllers/authController");
 
-// middleware
-router.use(
-  cors({
-    credentials: true,
-    origin: "http://localhost:5173",
-  })
-);
-
 router.get("/", test);
-router.post("/register", registerUser);
+router.post("/register", upload.single("image"), registerUser);
 router.post("/login", loginUser);
 router.get("/Profile", getProfile);
+router.get("/logout", logoutUser);
 
 module.exports = router;
