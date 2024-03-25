@@ -91,6 +91,7 @@ const registerUser = async (req, res) => {
       password: hashedPassword,
       status: "Pending",
       imagePath: file.filename,
+      refuseReason: "",
     });
 
     const userResponse = await User.findById(user._id).select("name email");

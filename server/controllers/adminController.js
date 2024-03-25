@@ -51,10 +51,16 @@ const refuseUser = async (req, res) => {
   const session = await User.startSession(); // Used to delete operations on db if file is not deleted
   session.startTransaction();
   try {
-    const { email, status } = req.body;
+    const { email, status, refuseReason } = req.body;
     if (status === "Pending") {
       const newStatus = "Refused";
-      const user = await findUserAndUpdateState(email, newStatus);
+      const user = await User.findOneAndUpdate(
+        { email: email },
+        { $set: { status: newStatus, refuseReason: refuseReason } }
+        // { $set: { refuseReason: refuseReason } }
+      )
+        .select("email name status imagePath")
+        .lean();
       deleteFile(`${dir}\\${user.imagePath}`);
       await session.commitTransaction();
       res.json({
@@ -78,14 +84,14 @@ const refuseUser = async (req, res) => {
   }
 };
 
-async function findUserAndUpdateState(email, newStatus) {
-  return await User.findOneAndUpdate(
-    { email: email },
-    { $set: { status: newStatus } }
-  )
-    .select("email name status")
-    .lean();
-}
+// async function findUserAndUpdateState(email, newStatus) {
+//   return await User.findOneAndUpdate(
+//     { email: email },
+//     { $set: { status: newStatus, refuseReason:  } }
+//   )
+//     .select("email name status imagePath")
+//     .lean();
+// }
 
 module.exports = {
   getUsersInfo,

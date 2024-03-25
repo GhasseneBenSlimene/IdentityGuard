@@ -54,7 +54,8 @@ export default function AdminDashboard() {
     try {
       const response = await axios.post("/admin/refuse", {
         email: user.email,
-        reason: user.reason,
+        status: user.status,
+        refuseReason: user.reason,
       });
       const newUsers = users.filter((u) => u.email !== email);
       setUsers(newUsers);
@@ -103,7 +104,6 @@ export default function AdminDashboard() {
                 type="button"
                 className="btn btn-danger dashboardBtn"
                 onClick={() => toggleReasonField(user.email)}
-                disabled={isSending}
               >
                 Reject
               </button>
