@@ -3,16 +3,19 @@ import { UserContext } from "../../context/userContext";
 import jsQR from "jsqr";
 import axios from "axios";
 import io from "socket.io-client";
-import "./Dashboard.css"; // Import de la feuille de style CSS
+import "./Dashboard.css";
 
 export default function Dashboard() {
   const { user } = useContext(UserContext);
   const [isCameraAvailable, setIsCameraAvailable] = useState(false);
+  const [isCameraBlocked, setIsCameraBlocked] = useState(false);
   const [scannedQrCode, setScannedQrCode] = useState("");
   const [identifier, setIdentifier] = useState("");
   const [method, setMethod] = useState(null);
   const [socket, setSocket] = useState(null);
   const [showAgeProofOptions, setShowAgeProofOptions] = useState(false);
+  const [errorMessage, setErrorMessage] = useState("");
+
   const videoRef = useRef(null);
 
   const handleProofOfAge = () => {
@@ -31,11 +34,12 @@ export default function Dashboard() {
           };
           socket.emit("message", data);
           console.log("envoyé");
+          setErrorMessage("Données envoyées");
+          setScannedQrCode("");
         } else {
-          console.log("Identifiant incorrect, veuillez recommencer");
+          setErrorMessage("Identifiant incorrect, veuillez recommencer");
         }
       } catch (error) {
-        // Gérer les erreurs de la requête Axios
         console.error("Erreur lors de la requête Axios :", error);
       }
     } else if (!identifier) {
@@ -44,10 +48,20 @@ export default function Dashboard() {
   };
 
   useEffect(() => {
+    if (scannedQrCode && method === "camera") {
+      setIdentifier(scannedQrCode);
+    }
+  }, [scannedQrCode, method]);
+
+  useEffect(() => {
     const newSocket = io(
       import.meta.env.VITE_API_URL + import.meta.env.VITE_SOCKET_PORT
     );
     setSocket(newSocket);
+
+    newSocket.on("error_message", (message) => {
+      setErrorMessage(message);
+    });
 
     return () => {
       if (newSocket) {
@@ -57,9 +71,8 @@ export default function Dashboard() {
   }, []);
 
   useEffect(() => {
-    if (isCameraAvailable && method === "camera") {
+    if (isCameraAvailable && method === "camera" && !isCameraBlocked) {
       const videoElement = videoRef.current;
-      let isVideoCaptured = false;
       const canvas = document.createElement("canvas");
       const context = canvas.getContext("2d");
 
@@ -73,9 +86,7 @@ export default function Dashboard() {
           context.drawImage(videoElement, 0, 0, width, height);
           const imageData = context.getImageData(0, 0, width, height);
           decodeQRCode(imageData, width, height);
-          if (!isVideoCaptured) {
-            requestAnimationFrame(scanFrame);
-          }
+          requestAnimationFrame(scanFrame);
         };
         scanFrame();
       });
@@ -85,7 +96,6 @@ export default function Dashboard() {
         if (code) {
           console.log("QR Code détecté :", code.data);
           setScannedQrCode(code.data);
-          stopVideoCapture();
         }
       }
 
@@ -96,46 +106,69 @@ export default function Dashboard() {
         })
         .catch(function (error) {
           console.error("Erreur lors de l'accès à la caméra :", error);
-          setIsCameraAvailable(false); // Mettre à jour l'état de la disponibilité de la caméra
+          setIsCameraAvailable(false);
+          setIsCameraBlocked(true);
         });
-
-      function stopVideoCapture() {
-        if (isVideoCaptured) return;
-        isVideoCaptured = true;
-        const stream = videoElement.srcObject;
-        const tracks = stream.getTracks();
-        tracks.forEach(function (track) {
-          track.stop();
-        });
-        videoElement.srcObject = null;
-      }
     }
-  }, [isCameraAvailable, method]);
+  }, [isCameraAvailable, method, isCameraBlocked]);
+
+  useEffect(() => {
+    const handleBeforeUnload = (event) => {
+      event.preventDefault();
+      event.returnValue = ""; // Message facultatif, certains navigateurs le montrent
+    };
+  
+    window.addEventListener("beforeunload", handleBeforeUnload);
+  
+    return () => {
+      window.removeEventListener("beforeunload", handleBeforeUnload);
+      stopVideoCapture();
+    };
+  }, []);
+  
+  function stopVideoCapture() {
+    const videoElement = videoRef.current;
+    if (videoElement && videoElement.srcObject) {
+      const stream = videoElement.srcObject;
+      const tracks = stream.getTracks();
+      tracks.forEach(function (track) {
+        track.stop();
+      });
+      videoElement.srcObject = null;
+    }
+  }
+  
 
   return (
     <div className="container">
       <h1>Welcome to your dashboard, {user && user.name}</h1>
       {!showAgeProofOptions && (
-        <button onClick={handleProofOfAge}>Prouver son âge</button>
+        <button onClick={handleProofOfAge}>Prouver mon âge</button>
       )}
       {showAgeProofOptions && (
-        <div className="button-group">
-          <button
-            onClick={() => {
-              setMethod("camera");
-              setIsCameraAvailable(true);
-            }}
-          >
-            Scanner le QR code
-          </button>
-          <button
-            onClick={() => {
-              setMethod("input");
-            }}
-          >
-            Entrer le QR code
-          </button>
-        </div>
+        <>
+          <div className="button-group">
+            <button
+              onClick={() => {
+                setMethod("camera");
+                setIsCameraAvailable(true);
+                setScannedQrCode("");
+              }}
+            >
+              Scanner le QR code
+            </button>
+            <button
+              onClick={() => {
+                setMethod("input");
+              }}
+            >
+              Entrer le QR code
+            </button>
+          </div>
+          <div id="message" className="error-message">
+            <p>{errorMessage}</p>
+          </div>
+        </>
       )}
       {method === "input" && (
         <div className="input-container">
@@ -145,7 +178,7 @@ export default function Dashboard() {
               value={identifier}
               onChange={(e) => setIdentifier(e.target.value)}
               placeholder="Entrer l'identifiant"
-              className="identifier-input" // Ajoutez la classe CSS pour le style de l'input
+              className="identifier-input"
             />
             {identifier && method === "input" && (
               <button onClick={handleSaveIdentifier} className="send-button">
@@ -171,8 +204,8 @@ export default function Dashboard() {
         </div>
       )}
       {method === "camera" && scannedQrCode && (
-        <p>QR Code scanné : {scannedQrCode}</p>
-      )}
-    </div>
-  );
-}
+        <p> QR Code scanné : {scannedQrCode}</p>
+        )}
+      </div>
+    );
+  }
