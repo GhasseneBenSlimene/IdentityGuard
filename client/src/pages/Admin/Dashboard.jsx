@@ -16,8 +16,9 @@ export default function AdminDashboard() {
         const response = await axios.get("/admin/usersInfo");
         const usersWithAdditionalProps = response.data.map((user) => ({
           ...user,
-          isReasonFieldShown: false, // Additional property to control the display of the reason field
-          reason: "", // Additional property to store the reason
+          dateOfBirth: "",
+          isReasonFieldShown: false,
+          reason: "",
         }));
         setUsers(usersWithAdditionalProps);
       } catch (error) {
@@ -27,6 +28,13 @@ export default function AdminDashboard() {
 
     fetchUsers();
   }, []);
+
+  const sendAge = async (dateOfBirth, email) => {
+    await axios.post("/admin/accept", {
+      dateOfBirth: dateOfBirth,
+      email: email,
+    });
+  };
 
   const toggleReasonField = (email) => {
     setUsers(
@@ -66,6 +74,17 @@ export default function AdminDashboard() {
     setIsSending(false);
   };
 
+  const handleDateOfBirthChange = (email, dateOfBirth) => {
+    const newusers = users.map((user) => {
+      if (user.email === email) {
+        return { ...user, dateOfBirth: dateOfBirth };
+      } else {
+        return user;
+      }
+    });
+    setUsers(newusers);
+  };
+
   if (loading) return <h1>Loading...</h1>;
 
   return (
@@ -96,7 +115,7 @@ export default function AdminDashboard() {
               <button
                 type="button"
                 className="btn btn-primary dashboardBtn"
-                onClick={() => sendAge(user)}
+                onClick={() => sendAge(user.dateOfBirth, user.email)}
               >
                 Accept
               </button>
