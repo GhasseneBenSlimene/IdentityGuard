@@ -31,7 +31,15 @@ const loginUser = async (req, res) => {
     if (!userToSign.admin) {
       delete userToSign.admin;
     }
-    if (match)
+    if (match) {
+      if (userToSign.status === "Pending") {
+        return res
+          .status(403)
+          .json({
+            error: "Your account is pending approval.",
+            status: "Pending",
+          });
+      }
       return jwt.sign(userToSign, process.env.JWT_SECRET, {}, (err, token) => {
         if (err)
           return res
@@ -39,7 +47,7 @@ const loginUser = async (req, res) => {
             .json({ error: "Error signing token, Please try again later" });
         return res.cookie("token", token).json(userToSign);
       });
-    else
+    } else
       return res
         .status(401)
         .json({ error: "Invalid credentials, Please try again" });

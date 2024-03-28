@@ -20,19 +20,18 @@ export default function Login() {
 
   const handleLogin = async (e) => {
     e.preventDefault();
-    const { isLoggedIn, isAdmin, user } = await loginUser(data);
+    const { isLoggedIn, isAdmin, user, status } = await loginUser(data);
     if (isLoggedIn) {
       setData({});
       setUser(user);
       if (isAdmin) {
         navigate("/admin/dashboard");
       } else {
-        if (user.status == "Pending") {
-          setIsPending(true);
-        } else {
-          navigate("/dashboard");
-        }
+        navigate("/dashboard");
       }
+    } else if (status == "Pending") {
+      setData({});
+      setIsPending(true);
     }
   };
 

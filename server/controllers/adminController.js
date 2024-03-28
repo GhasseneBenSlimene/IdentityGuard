@@ -39,6 +39,7 @@ const verifyAdminSession = (req, res, next) => {
 const acceptUser = (req, res, next) => {
   try {
     const { email, dateOfBirth } = req.body;
+    console.log(dateOfBirth);
     const status = "Accepted";
     console.log("dateOfBirth: ", dateOfBirth);
     // const proof = ZKP(dateOfBirth);

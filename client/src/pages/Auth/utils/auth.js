@@ -46,6 +46,14 @@ async function loginUser(data) {
     }
   } catch (error) {
     handleError("Login error", error);
+    if (
+      error &&
+      error.response &&
+      error.response.data &&
+      error.response.data.status
+    ) {
+      return { isLoggedIn, status: error.response.data.status };
+    }
     return { isLoggedIn };
   }
 }
