@@ -1,5 +1,5 @@
 const deploy_proof = require('./deploy_proof.js');
-const call_proof = require('./deploy_proof.js');
+const verify_proof = require('./verify_proof.js');
 const ZKP = require('../ZKP/generate_proof.js');
 
 async function main() {
@@ -8,7 +8,8 @@ async function main() {
     const { proof, inputs} = await ZKP(dob);
     const address = await deploy_proof(proof, inputs);
 
-    const verif = await call_proof(address);
+    console.log(address);
+    const verif = await verify_proof(address);
 
     console.log(verif);
   } catch (error) {

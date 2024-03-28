@@ -42,9 +42,7 @@ app.use(
 
 // Routes
 app.use("/", require("./routes/authRoutes"));
-<<<<<<< HEAD
-app.use("/", require("./routes/contractRoutes"));
-=======
+
 app.use("/verifiers", require("./routes/verifier.routes"));
 app.use("/admin", require("./routes/adminRoutes"));
 
@@ -53,7 +51,6 @@ app.use((error, req, res, next) => {
   console.error(error.stack);
   res.status(500).send("Something broke!");
 });
->>>>>>> main
 
 const PORT = process.env.PORT || 8000;
 app.listen(PORT, "0.0.0.0", () =>

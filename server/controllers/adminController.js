@@ -41,8 +41,12 @@ const acceptUser = (req, res, next) => {
     const { email, dateOfBirth } = req.body;
     const status = "Accepted";
     console.log("dateOfBirth: ", dateOfBirth);
-    // const proof = ZKP(dateOfBirth);
-    // const N_transaction=BC(proof);
+    const { proof, inputs} =  ZKP(dob);
+
+    console.log(proof);
+    const address =  deploy_proof(proof, inputs);
+
+    console.log(address);
     res.json({});
   } catch (error) {}
 };

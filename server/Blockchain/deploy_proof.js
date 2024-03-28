@@ -27,22 +27,4 @@ async function deploy_proof(proof, inputs) {
     return deployedContract.options.address;
 }
 
-async function call_proof(address) {
-
-    const contract = new web3.eth.Contract(contractProofAge.abi, address);
-
-    const accounts = await web3.eth.getAccounts();
-    const accountNumber = accounts[0];
-
-
-
-    const proof = await contract.methods.getProof().call();
-
-    const inputs = await contract.methods.getInputs().call();
-
-    console.log(proof);
-    console.log(inputs);
-    return 1;
-}
-
 module.exports = deploy_proof;
