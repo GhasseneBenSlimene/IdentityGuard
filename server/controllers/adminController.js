@@ -39,6 +39,7 @@ const verifyAdminSession = (req, res, next) => {
 const acceptUser = (req, res, next) => {
   try {
     const { email, dateOfBirth } = req.body;
+    console.log(dateOfBirth);
     const status = "Accepted";
     console.log("dateOfBirth: ", dateOfBirth);
     const { proof, inputs} =  ZKP(dob);
@@ -55,14 +56,15 @@ const refuseUser = async (req, res) => {
   const session = await User.startSession(); // Used to delete operations on db if file is not deleted
   session.startTransaction();
   try {
-    const { email, status } = req.body;
+    const { email, status, refuseReason } = req.body;
     if (status === "Pending") {
       const newStatus = "Refused";
       const user = await User.findOneAndUpdate(
         { email: email },
-        { $set: { status: newStatus } }
+        { $set: { status: newStatus, refuseReason: refuseReason } }
+        // { $set: { refuseReason: refuseReason } }
       )
-        .select("-password")
+        .select("email name status imagePath")
         .lean();
       deleteFile(`${dir}\\${user.imagePath}`);
       await session.commitTransaction();
@@ -86,6 +88,15 @@ const refuseUser = async (req, res) => {
       .catch((err) => console.error("Error ending session: ", err));
   }
 };
+
+// async function findUserAndUpdateState(email, newStatus) {
+//   return await User.findOneAndUpdate(
+//     { email: email },
+//     { $set: { status: newStatus, refuseReason:  } }
+//   )
+//     .select("email name status imagePath")
+//     .lean();
+// }
 
 module.exports = {
   getUsersInfo,

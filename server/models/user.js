@@ -10,6 +10,7 @@ const UserSchema = new Schema({
   password: String,
   status: String,
   imagePath: String,
+  refuseReason: String,
 });
 
 const UserModel = mongoose.model("User", UserSchema);

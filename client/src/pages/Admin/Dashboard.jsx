@@ -14,12 +14,12 @@ export default function AdminDashboard() {
     const fetchUsers = async () => {
       try {
         const response = await axios.get("/admin/usersInfo");
-        // Initialize dateOfBirth for each user
-        const usersWithDateOfBirth = response.data.map((user) => ({
+        const usersWithAdditionalProps = response.data.map((user) => ({
           ...user,
-          dateOfBirth: "",
+          isReasonFieldShown: false, // Additional property to control the display of the reason field
+          reason: "", // Additional property to store the reason
         }));
-        setUsers(usersWithDateOfBirth);
+        setUsers(usersWithAdditionalProps);
       } catch (error) {
         console.error("Failed to fetch users:", error);
       }
@@ -28,27 +28,36 @@ export default function AdminDashboard() {
     fetchUsers();
   }, []);
 
-  // Function to handle dateOfBirth change for each user
-  const handleDateOfBirthChange = (email, newDateOfBirth) => {
+  const toggleReasonField = (email) => {
     setUsers(
       users.map((user) =>
-        user.email === email ? { ...user, dateOfBirth: newDateOfBirth } : user
+        user.email === email
+          ? { ...user, isReasonFieldShown: !user.isReasonFieldShown }
+          : user
       )
     );
   };
 
-  const sendAge = async (user) => {
-    await axios.post("/admin/accept", user);
+  const handleReasonChange = (email, reason) => {
+    setUsers(
+      users.map((user) => (user.email === email ? { ...user, reason } : user))
+    );
   };
 
-  const sendRefuse = async (user) => {
+  const sendRefuse = async (email) => {
     setIsSending(true);
+    const user = users.find((user) => user.email === email);
+    if (!user) {
+      console.error("User not found");
+      return;
+    }
     try {
-      const response = await axios.post("/admin/refuse", user);
-      console.log(response.data.user.email, user.email);
-      const newUsers = users.filter((user) => {
-        return response.data.user.email !== user.email;
+      const response = await axios.post("/admin/refuse", {
+        email: user.email,
+        status: user.status,
+        refuseReason: user.reason,
       });
+      const newUsers = users.filter((u) => u.email !== email);
       setUsers(newUsers);
       toast.success(response.data.message);
     } catch (error) {
@@ -83,25 +92,40 @@ export default function AdminDashboard() {
               />
               <label htmlFor={`dateOfBirth-${user.email}`}>Date of Birth</label>
             </div>
-            <div className="buttons dashboardButtons">
+            <div className="dashboardButtons">
               <button
-                type="submit"
+                type="button"
                 className="btn btn-primary dashboardBtn"
-                onClick={() => {
-                  sendAge(user);
-                }}
+                onClick={() => sendAge(user)}
               >
                 Accept
               </button>
               <button
-                type="submit"
+                type="button"
                 className="btn btn-danger dashboardBtn"
-                onClick={() => {
-                  sendRefuse(user);
-                }}
-                disabled={isSending}
+                onClick={() => toggleReasonField(user.email)}
               >
                 Reject
+              </button>
+            </div>
+            <div
+              className={`reasonField ${user.isReasonFieldShown ? "show" : ""}`}
+            >
+              <input
+                type="text"
+                className="form-control reasonInput"
+                value={user.reason}
+                onChange={(e) => handleReasonChange(user.email, e.target.value)}
+                placeholder="Reason"
+                aria-label="Reason"
+              />
+              <button
+                type="button"
+                className="btn btn-warning dashboardBtn"
+                onClick={() => sendRefuse(user.email)}
+                disabled={isSending}
+              >
+                Submit Reason
               </button>
             </div>
           </div>

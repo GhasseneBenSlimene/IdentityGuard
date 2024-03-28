@@ -1,10 +1,8 @@
 import { useState } from "react";
-import { useNavigate } from "react-router-dom";
 import { registerUser } from "./utils/auth";
 import { Input } from "../../components/Input";
 
 export default function Register() {
-  const navigate = useNavigate();
   const [isRegistered, setIsRegistered] = useState(false);
   const [data, setData] = useState({
     name: "",
@@ -30,7 +28,7 @@ export default function Register() {
 
   return (
     <div className="d-flex justify-content-center align-items-center">
-      <form className="col-5" onSubmit={handleRegister}>
+      <form className="col-5 mt-5" onSubmit={handleRegister}>
         <Input
           type="text"
           name="name"
