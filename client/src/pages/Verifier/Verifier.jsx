@@ -33,7 +33,7 @@ function VerifierPage() {
 
   useEffect(() => {
     if (verifierId) {
-      const newSocket = io("http://localhost:3000");
+      const newSocket = io(import.meta.env.VITE_API_URL + import.meta.env.VITE_SOCKET_PORT);
       setSocket(newSocket);
       newSocket.emit("joinVerifier", verifierId);
 
