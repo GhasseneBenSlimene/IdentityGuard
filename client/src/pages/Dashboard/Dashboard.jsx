@@ -6,7 +6,7 @@ import io from "socket.io-client";
 import "./Dashboard.css";
 
 export default function Dashboard() {
-  const { user } = useContext(UserContext);
+  const { user, loading } = useContext(UserContext);
   const [isCameraAvailable, setIsCameraAvailable] = useState(false);
   const [isCameraBlocked, setIsCameraBlocked] = useState(false);
   const [scannedQrCode, setScannedQrCode] = useState("");
@@ -17,6 +17,9 @@ export default function Dashboard() {
   const [errorMessage, setErrorMessage] = useState("");
 
   const videoRef = useRef(null);
+
+  if (loading) return <h1>Loading...</h1>;
+  if (!user) return <div>Please log in.</div>;
 
   const handleProofOfAge = () => {
     setShowAgeProofOptions(true);
@@ -117,15 +120,15 @@ export default function Dashboard() {
       event.preventDefault();
       event.returnValue = ""; // Message facultatif, certains navigateurs le montrent
     };
-  
+
     window.addEventListener("beforeunload", handleBeforeUnload);
-  
+
     return () => {
       window.removeEventListener("beforeunload", handleBeforeUnload);
       stopVideoCapture();
     };
   }, []);
-  
+
   function stopVideoCapture() {
     const videoElement = videoRef.current;
     if (videoElement && videoElement.srcObject) {
@@ -137,7 +140,6 @@ export default function Dashboard() {
       videoElement.srcObject = null;
     }
   }
-  
 
   return (
     <div className="container">
@@ -205,7 +207,7 @@ export default function Dashboard() {
       )}
       {method === "camera" && scannedQrCode && (
         <p> QR Code scanné : {scannedQrCode}</p>
-        )}
-      </div>
-    );
-  }
+      )}
+    </div>
+  );
+}
