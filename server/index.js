@@ -44,6 +44,7 @@ app.use(
 app.use("/", require("./routes/authRoutes"));
 app.use("/verifiers", require("./routes/verifier.routes"));
 app.use("/admin", require("./routes/adminRoutes"));
+app.use("/refused", require("./routes/refusedRoutes"));
 
 // Gestion des erreurs
 app.use((error, req, res, next) => {

@@ -57,8 +57,13 @@ const refuseUser = async (req, res) => {
       const newStatus = "Refused";
       const user = await User.findOneAndUpdate(
         { email: email },
-        { $set: { status: newStatus, refuseReason: refuseReason } }
-        // { $set: { refuseReason: refuseReason } }
+        {
+          $set: {
+            status: newStatus,
+            refuseReason: refuseReason,
+            imagePath: "",
+          },
+        }
       )
         .select("email name status imagePath")
         .lean();

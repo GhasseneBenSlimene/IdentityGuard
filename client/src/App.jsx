@@ -7,6 +7,7 @@ import Register from "./pages/Auth/Register";
 import Dashboard from "./pages/Dashboard/Dashboard";
 import AdminDashboard from "./pages/Admin/Dashboard";
 import Verifier_page from "./pages/Verifier/Verifier";
+import RefusedDashboard from "./pages/Dashboard/RefusedDashboard";
 import { Toaster } from "react-hot-toast";
 import { UserContextProvider } from "./context/userContext";
 import axiosConfig from "./config/axiosConfig";
@@ -23,6 +24,7 @@ function App() {
         <Route path="/dashboard" element={<Dashboard />} />
         <Route path="/verifiers" element={<Verifier_page />} />
         <Route path="/admin/dashboard" element={<AdminDashboard />} />
+        <Route path="/refusedDashboard" element={<RefusedDashboard />} />
       </Routes>
     </UserContextProvider>
   );
