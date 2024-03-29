@@ -4,6 +4,9 @@ const mongoose = require("mongoose");
 const cookieParser = require("cookie-parser");
 const cors = require("cors");
 const socketManager = require("./sockets/socketManager");
+const { verifyRefusedSession } = require("./controllers/refusedController");
+
+const { verifyAdminSession } = require("./controllers/adminController");
 
 const app = express(); // Utilisation de la fonction express pour créer l'application
 
@@ -43,8 +46,8 @@ app.use(
 // Routes
 app.use("/", require("./routes/authRoutes"));
 app.use("/verifiers", require("./routes/verifier.routes"));
-app.use("/admin", require("./routes/adminRoutes"));
-app.use("/refused", require("./routes/refusedRoutes"));
+app.use("/admin", verifyAdminSession, require("./routes/adminRoutes"));
+app.use("/refused", verifyRefusedSession, require("./routes/refusedRoutes"));
 
 // Gestion des erreurs
 app.use((error, req, res, next) => {
