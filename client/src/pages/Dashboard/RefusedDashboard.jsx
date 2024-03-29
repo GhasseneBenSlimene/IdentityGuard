@@ -3,9 +3,12 @@ import { UserContext } from "../../context/userContext";
 import axios from "axios";
 import toast from "react-hot-toast";
 import { Input } from "../../components/Input";
+import { logoutUser } from "../Auth/utils/auth";
+import { useNavigate } from "react-router-dom";
 
 const RefusedDashboard = () => {
-  const { user, loading } = useContext(UserContext);
+  const { user, setUser } = useContext(UserContext);
+  const navigate = useNavigate();
   const [selectedFile, setSelectedFile] = useState(null);
   const [refuseReason, setRefuseReason] = useState("");
 
@@ -19,7 +22,7 @@ const RefusedDashboard = () => {
     };
 
     fetchReason();
-  }, [loading]);
+  }, []);
 
   const handleFileChange = (event) => {
     setSelectedFile(event.target.files[0]);
@@ -33,10 +36,11 @@ const RefusedDashboard = () => {
     }
 
     const formData = new FormData();
-    formData.append("identityCard", selectedFile);
+    formData.append("image", selectedFile);
+    formData.append("email", user.email);
 
     try {
-      await axios.post("/sendImage", formData, {
+      await axios.post("/refused/sendImage", formData, {
         headers: {
           "Content-Type": "multipart/form-data",
         },
@@ -55,7 +59,13 @@ const RefusedDashboard = () => {
         <br />
         Reason: {refuseReason || "No specific reason provided."}
       </div>
-      <form onSubmit={handleSubmit}>
+      <form
+        onSubmit={(e) => {
+          handleSubmit(e);
+          logoutUser(setUser);
+          navigate("/");
+        }}
+      >
         <div className="form-group">
           <label htmlFor="identityCardInput">
             Resubmit your identity card:

@@ -1,7 +1,7 @@
 const User = require("../models/user");
 const jwt = require("jsonwebtoken");
 
-const sendReason = async (req, res) => {
+const getReason = async (req, res) => {
   const { email } = req.body;
   const refuseReason = await User.findOne({ email: email }).select(
     "refuseReason"
@@ -29,7 +29,30 @@ const verifyRefusedSession = (req, res, next) => {
   }
 };
 
+const sendImage = async (req, res) => {
+  const { email } = req.body;
+  const file = req.file;
+  try {
+    await User.updateOne(
+      { email },
+      {
+        $set: {
+          status: "Pending",
+          imagePath: file.filename,
+        },
+      }
+    );
+    res.json({ message: "Image saved successfully" });
+  } catch (error) {
+    console.log("Error in sendImage: ", error);
+    return res.status(500).json({
+      error: "Server can't process the image now, please try again later.",
+    });
+  }
+};
+
 module.exports = {
-  sendReason,
+  getReason,
   verifyRefusedSession,
+  sendImage,
 };
