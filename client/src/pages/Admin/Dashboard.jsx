@@ -29,13 +29,6 @@ export default function AdminDashboard() {
     fetchUsers();
   }, []);
 
-  const sendAge = async (dateOfBirth, email) => {
-    await axios.post("/admin/accept", {
-      dateOfBirth: dateOfBirth,
-      email: email,
-    });
-  };
-
   const toggleReasonField = (email) => {
     setUsers(
       users.map((user) =>
@@ -50,6 +43,35 @@ export default function AdminDashboard() {
     setUsers(
       users.map((user) => (user.email === email ? { ...user, reason } : user))
     );
+  };
+
+  const sendAge = async (dateOfBirth, email) => {
+    await axios.post("/admin/accept", {
+      dateOfBirth: dateOfBirth,
+      email: email,
+    });
+  };
+
+  const sendAccept = async (email) => {
+    setIsSending(true);
+    const user = users.find((user) => user.email === email);
+    if (!user) {
+      console.error("User not found");
+      return;
+    }
+    try {
+      const response = await axios.post("/admin/accept", {
+        email: user.email,
+        status: user.status,
+        dateOfBirth: user.dateOfBirth,
+      });
+      const newUsers = users.filter((u) => u.email !== email);
+      setUsers(newUsers);
+      toast.success(response.data.message);
+    } catch (error) {
+      handleError("sendAccept error: ", error);
+    }
+    setIsSending(false);
   };
 
   const sendRefuse = async (email) => {
@@ -115,7 +137,8 @@ export default function AdminDashboard() {
               <button
                 type="button"
                 className="btn btn-primary dashboardBtn"
-                onClick={() => sendAge(user.dateOfBirth, user.email)}
+                onClick={() => sendAccept(user.email)}
+                disabled={isSending}
               >
                 Accept
               </button>

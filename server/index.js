@@ -7,6 +7,7 @@ const socketManager = require("./sockets/socketManager");
 const { verifyRefusedSession } = require("./controllers/refusedController");
 
 const { verifyAdminSession } = require("./controllers/adminController");
+const { verifyAcceptedSession } = require("./controllers/verifier.controller");
 
 const app = express(); // Utilisation de la fonction express pour créer l'application
 
@@ -45,7 +46,11 @@ app.use(
 
 // Routes
 app.use("/", require("./routes/authRoutes"));
-app.use("/verifiers", require("./routes/verifier.routes"));
+app.use(
+  "/verifiers",
+  verifyAcceptedSession,
+  require("./routes/verifier.routes")
+);
 app.use("/admin", verifyAdminSession, require("./routes/adminRoutes"));
 app.use("/refused", verifyRefusedSession, require("./routes/refusedRoutes"));
 
