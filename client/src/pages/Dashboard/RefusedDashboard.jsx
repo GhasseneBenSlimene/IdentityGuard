@@ -14,7 +14,6 @@ const RefusedDashboard = () => {
 
   useEffect(() => {
     const fetchReason = async () => {
-      console.log("email: " + user.email);
       const response = await axios.post("/refused/getReason", {
         email: user.email,
       });
@@ -52,9 +51,19 @@ const RefusedDashboard = () => {
     }
   };
 
+  if (!user) {
+    return (
+      <div className="alert alert-danger justify-content-center" role="alert">
+        You must be logged in to view this page.
+      </div>
+    );
+  }
+
   return (
     <div className="container mt-4">
       <div className="alert alert-danger" role="alert">
+        Hello {user.name}
+        <br />
         Your account creation demand has been refused.
         <br />
         Reason: {refuseReason || "No specific reason provided."}

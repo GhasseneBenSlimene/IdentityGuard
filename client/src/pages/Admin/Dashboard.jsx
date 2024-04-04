@@ -8,7 +8,6 @@ import toast from "react-hot-toast";
 export default function AdminDashboard() {
   const [users, setUsers] = useState([]);
   const [isSending, setIsSending] = useState(false);
-  const { loading } = useContext(UserContext);
 
   useEffect(() => {
     const fetchUsers = async () => {
@@ -106,8 +105,6 @@ export default function AdminDashboard() {
     });
     setUsers(newusers);
   };
-
-  if (loading) return <h1>Loading...</h1>;
 
   return (
     <>

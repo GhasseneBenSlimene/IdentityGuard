@@ -112,6 +112,14 @@ export default function Dashboard() {
     }
   }, [isCameraAvailable, method]);
 
+  if (!user) {
+    return (
+      <div className="alert alert-danger justify-content-center" role="alert">
+        You must be logged in to view this page.
+      </div>
+    );
+  }
+
   return (
     <div className="container">
       <h1>Welcome to your dashboard, {user && user.name}</h1>

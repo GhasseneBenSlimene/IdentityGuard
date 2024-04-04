@@ -46,11 +46,7 @@ app.use(
 
 // Routes
 app.use("/", require("./routes/authRoutes"));
-app.use(
-  "/verifiers",
-  verifyAcceptedSession,
-  require("./routes/verifier.routes")
-);
+app.use("/verifiers", require("./routes/verifier.routes"));
 app.use("/admin", verifyAdminSession, require("./routes/adminRoutes"));
 app.use("/refused", verifyRefusedSession, require("./routes/refusedRoutes"));
 
