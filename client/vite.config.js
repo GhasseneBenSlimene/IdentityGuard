@@ -6,5 +6,9 @@ export default defineConfig({
   plugins: [react()],
   server: {
     host: true,
+    https: {
+      key: 'server.key', // Chemin vers la clé privée
+      cert: 'server.cert', // Chemin vers le certificat
+    },
   },
 });
