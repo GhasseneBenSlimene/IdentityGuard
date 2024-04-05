@@ -1,3 +1,5 @@
+const https = require('https');
+const fs = require('fs');
 const express = require("express");
 const dotenv = require("dotenv").config();
 const mongoose = require("mongoose");
@@ -57,13 +59,23 @@ app.use((error, req, res, next) => {
   res.status(500).send("Something broke!");
 });
 
-const PORT = process.env.PORT || 8000;
-app.listen(PORT, "0.0.0.0", () =>
-  console.log(`Server is running on port ${PORT}`)
-);
+const PORT = 443;
 
-// Serveur pour les sockets écoutant sur le port 3000
-const io = require("socket.io")(3000, {
+// Configuration pour le serveur HTTPS
+const httpsOptions = {
+  key: fs.readFileSync('server.key'), // Chemin vers la clé privée
+  cert: fs.readFileSync('server.cert'), // Chemin vers le certificat
+};
+
+// Création du serveur HTTPS
+const server = https.createServer(httpsOptions, app);
+
+// Lancement du serveur sur le port spécifié
+server.listen(PORT, () => {
+  console.log(`Server is running on port ${PORT}`);
+});
+
+const io = require("socket.io")(server, {
   cors: {
     origin: true, // Autoriser les requêtes depuis ce domaine
     methods: ["GET", "POST"], // Méthodes HTTP autorisées
