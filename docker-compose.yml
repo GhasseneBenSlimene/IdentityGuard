@@ -13,3 +13,7 @@ services:
     ports:
       - "8000:8000"
       - "3000:3000"
+  ganache:
+    image: trufflesuite/ganache-cli:latest
+    ports:
+      - "8545:8545"

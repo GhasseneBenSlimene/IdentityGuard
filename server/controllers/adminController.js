@@ -1,6 +1,6 @@
 const User = require("../models/user");
 const jwt = require("jsonwebtoken");
-const ZKP = require("../ZKP/generate_proof");
+const ZKP = require("../ZKP/generate_proof_snarkjs");
 const deploy_proof = require("../Blockchain/deploy_proof");
 const verify_proof = require("../Blockchain/verify_proof");
 const { deleteFile, dir } = require("../handlers/fileHandler");
@@ -38,22 +38,39 @@ const verifyAdminSession = (req, res, next) => {
   }
 };
 
+/*
+const acceptUser = async (req, res, next) => {
+  const { email, status, dateOfBirth } = req.body;
+    console.log("dateOfBirth: ", dateOfBirth);
+  const { proof, publicSignals} =  await ZKP(dateOfBirth);
+
+      
+  console.log(proof);
+  const address =  await deploy_proof(proof, publicSignals);
+  
+  const verif = await verify_proof(address);
+  console.log(verif);
+  console.log(address);
+};
+*/
 const acceptUser = async (req, res, next) => {
   let session;
   try {
     const { email, status, dateOfBirth } = req.body;
     console.log("dateOfBirth: ", dateOfBirth);
-    const { proof, inputs} =  await ZKP(dateOfBirth);
 
-    console.log(proof);
-    const address =  await deploy_proof(proof, inputs);
-
-    const verif = await verify_proof(address);
-    console.log(verif);
-    console.log(address);
     session = await User.startSession(); // Used to delete operations on db if file is not deleted
     session.startTransaction();
     if (status === "Pending") {
+      const { proof, publicSignals} =  await ZKP(dateOfBirth);
+
+      const address =  await deploy_proof(proof, publicSignals);
+
+      await User.updateOne({email: email},{
+        $set: {
+          address: address
+        },
+      })
       const newStatus = "Accepted";
       const user = await User.findOne({ email: email })
         .select("email name status imagePath")
@@ -118,7 +135,7 @@ const refuseUser = async (req, res) => {
       await session.commitTransaction();
       res.json({
         user: user,
-        message: "User status has been successfully updated to 'Refused'.",
+        message: "User status has beenf successfully updated to 'Refused'.",
       });
     } else {
       await session.abortTransaction();

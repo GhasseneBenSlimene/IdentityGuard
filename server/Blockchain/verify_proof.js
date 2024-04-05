@@ -30,7 +30,7 @@ async function verify_proof(address) {
         gasPrice:1000000
     });
 
-    const verif = await ContractVerif.method.verifyProof(proof.at, proof.b, proof.c, inputs).call();
+    const verif = await ContractVerif.methods.verifyProof(proof.a, proof.b, proof.c, inputs).call();
     return verif;
 }
 

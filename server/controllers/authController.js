@@ -98,6 +98,7 @@ const registerUser = async (req, res) => {
       status: "Pending",
       imagePath: file.filename,
       refuseReason: "",
+      address: "",
     });
 
     const userResponse = await User.findById(user._id).select("name email");
