@@ -53,7 +53,7 @@ app.use((error, req, res, next) => {
   res.status(500).send("Something broke!");
 });
 
-const PORT = process.env.PORT || 8000;
+const PORT = 443;
 
 // Configuration pour le serveur HTTPS
 const httpsOptions = {
@@ -69,7 +69,6 @@ server.listen(PORT, () => {
   console.log(`Server is running on port ${PORT}`);
 });
 
-// Serveur pour les sockets écoutant sur le serveur HTTPS
 const io = require("socket.io")(server, {
   cors: {
     origin: true, // Autoriser les requêtes depuis ce domaine
