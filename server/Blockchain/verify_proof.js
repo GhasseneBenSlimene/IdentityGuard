@@ -1,7 +1,7 @@
 // verify_proof.js
 const {Web3} = require('web3');
 
-const contractVerifier = require('./build/contracts/Verifier.json');
+const contractVerifier = require('./build/contracts/VerifierAge.json');
 const contractProofAge = require('./build/contracts/ProofContract.json');
 const web3 = new Web3("http://localhost:8545");
 
@@ -21,22 +21,16 @@ async function verify_proof(address) {
 
     const contractVerif = new web3.eth.Contract(contractVerifier.abi);
 
-    const proofStruct = {
-        a: proof.a,
-        b: proof.b,
-        c: proof.c
-    };
-
     // Mettre dans une autre fonction pour deployer qu'une seul fois ce contract stocker l'address
     const ContractVerif = await contractVerif.deploy({
         data: contractVerifier.bytecode,
         }).send({
         from: accountNumber,
         gas: '4700000',
+        gasPrice:1000000
     });
 
-
-    const verif = await ContractVerif.methods.verifyTx(proofStruct, inputs).call();
+    const verif = await ContractVerif.method.verifyProof(proof.at, proof.b, proof.c, inputs).call();
     return verif;
 }
 

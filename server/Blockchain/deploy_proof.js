@@ -13,14 +13,18 @@ async function deploy_proof(proof, inputs) {
     const accounts = await web3.eth.getAccounts();
     const accountNumber = accounts[0];
 
+    const proofa = [proof.pi_a[0], proof.pi_a[1]];
+    const proofc = [proof.pi_c[0], proof.pi_c[1]];
+    const proofb = [[proof.pi_b[0][1], proof.pi_b[0][0]], [proof.pi_b[1][1], proof.pi_b[1][0]]];
 
 
     const deployedContract = await contract.deploy({
         data: contractProofAge.bytecode,
-        arguments: [proof.a, proof.b, proof.c, inputs],
+        arguments: [proofa, proofb, proofc, inputs],
         }).send({
         from: accountNumber,
         gas: '4700000',
+        gasPrice: 1000000
     });
 
     console.log(deployedContract.options.address);
