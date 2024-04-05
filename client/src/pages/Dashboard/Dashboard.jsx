@@ -99,8 +99,15 @@ export default function Dashboard() {
         }
       }
 
+      // Contraintes pour accéder à la caméra arrière
+      const constraints = {
+        video: {
+          facingMode: "environment" // Utilise la caméra arrière
+        }
+      };
+
       navigator.mediaDevices
-        .getUserMedia({ video: true })
+        .getUserMedia(constraints) // Utilise les contraintes
         .then(function (stream) {
           videoElement.srcObject = stream;
         })
@@ -205,7 +212,7 @@ export default function Dashboard() {
       )}
       {method === "camera" && scannedQrCode && (
         <p> QR Code scanné : {scannedQrCode}</p>
-        )}
-      </div>
-    );
-  }
+      )}
+    </div>
+  );
+}
