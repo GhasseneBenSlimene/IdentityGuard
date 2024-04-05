@@ -1,6 +1,8 @@
 const User = require("../models/user");
 const jwt = require("jsonwebtoken");
 const ZKP = require("../ZKP/generate_proof");
+const deploy_proof = require("../Blockchain/deploy_proof");
+const verify_proof = require("../Blockchain/verify_proof");
 const { deleteFile, dir } = require("../handlers/fileHandler");
 
 const getUsersInfo = async (req, res) => {
@@ -36,17 +38,19 @@ const verifyAdminSession = (req, res, next) => {
   }
 };
 
-const acceptUser = (req, res, next) => {
+const acceptUser = async (req, res, next) => {
   try {
     const { email, dateOfBirth } = req.body;
     console.log(dateOfBirth);
     const status = "Accepted";
     console.log("dateOfBirth: ", dateOfBirth);
-    const { proof, inputs} =  ZKP(dob);
+    const { proof, inputs} =  await ZKP(dateOfBirth);
 
     console.log(proof);
-    const address =  deploy_proof(proof, inputs);
+    const address =  await deploy_proof(proof, inputs);
 
+    const verif = await verify_proof(address);
+    console.log(verif);
     console.log(address);
     res.json({});
   } catch (error) {}
