@@ -141,6 +141,14 @@ export default function Dashboard() {
     }
   }
 
+  if (!user) {
+    return (
+      <div className="alert alert-danger justify-content-center" role="alert">
+        You must be logged in to view this page.
+      </div>
+    );
+  }
+
   return (
 
     <div className="container">

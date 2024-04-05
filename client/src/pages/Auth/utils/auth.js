@@ -42,7 +42,7 @@ async function loginUser(data) {
       // Convert the admin status to a boolean
       const isAdmin = response.data.admin === "true";
       toast.success("You are logged in successfully");
-      return { isLoggedIn, isAdmin, user };
+      return { isLoggedIn, isAdmin, user, status: user.status };
     }
   } catch (error) {
     handleError("Login error", error);

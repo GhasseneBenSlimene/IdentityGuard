@@ -12,8 +12,6 @@ export default function Login() {
     password: "",
   });
   const [isPending, setIsPending] = useState(false);
-  const [isRefused, setIsRefused] = useState(false);
-  const [isAccepted, setIsAccepted] = useState(false);
 
   const handleChange = (e) =>
     setData({ ...data, [e.target.name]: e.target.value });
@@ -26,8 +24,10 @@ export default function Login() {
       setUser(user);
       if (isAdmin) {
         navigate("/admin/dashboard");
-      } else {
+      } else if (status == "Accepted") {
         navigate("/dashboard");
+      } else if (status == "Refused") {
+        navigate("/refusedDashboard");
       }
     } else if (status == "Pending") {
       setData({});

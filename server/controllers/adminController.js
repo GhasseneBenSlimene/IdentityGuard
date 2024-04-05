@@ -39,10 +39,9 @@ const verifyAdminSession = (req, res, next) => {
 };
 
 const acceptUser = async (req, res, next) => {
+  let session;
   try {
-    const { email, dateOfBirth } = req.body;
-    console.log(dateOfBirth);
-    const status = "Accepted";
+    const { email, status, dateOfBirth } = req.body;
     console.log("dateOfBirth: ", dateOfBirth);
     const { proof, inputs} =  await ZKP(dateOfBirth);
 
@@ -52,8 +51,45 @@ const acceptUser = async (req, res, next) => {
     const verif = await verify_proof(address);
     console.log(verif);
     console.log(address);
-    res.json({});
-  } catch (error) {}
+    session = await User.startSession(); // Used to delete operations on db if file is not deleted
+    session.startTransaction();
+    if (status === "Pending") {
+      const newStatus = "Accepted";
+      const user = await User.findOne({ email: email })
+        .select("email name status imagePath")
+        .lean();
+      deleteFile(`${dir}\\${user.imagePath}`);
+      await User.updateOne(
+        { email: email },
+        {
+          $set: {
+            status: newStatus,
+            imagePath: "",
+          },
+        }
+      )
+        .select("email name status imagePath")
+        .lean();
+      await session.commitTransaction();
+      res.json({
+        user: user,
+        message: "User status has been successfully updated to 'Accepted'.",
+      });
+    } else {
+      await session.abortTransaction();
+      res.status(400).json({ error: "User is not in Pending state" });
+    }
+  } catch (error) {
+    console.log("Error in refuseUser: ", error);
+    await session.abortTransaction();
+    res
+      .status(500)
+      .json({ error: "accepte user error, please try again later." });
+  } finally {
+    session
+      .endSession()
+      .catch((err) => console.error("Error ending session: ", err));
+  }
 };
 
 const refuseUser = async (req, res) => {
@@ -63,14 +99,22 @@ const refuseUser = async (req, res) => {
     const { email, status, refuseReason } = req.body;
     if (status === "Pending") {
       const newStatus = "Refused";
-      const user = await User.findOneAndUpdate(
-        { email: email },
-        { $set: { status: newStatus, refuseReason: refuseReason } }
-        // { $set: { refuseReason: refuseReason } }
-      )
+      const user = await User.findOne({ email: email })
         .select("email name status imagePath")
         .lean();
       deleteFile(`${dir}\\${user.imagePath}`);
+      await User.updateOne(
+        { email: email },
+        {
+          $set: {
+            status: newStatus,
+            refuseReason: refuseReason,
+            imagePath: "",
+          },
+        }
+      )
+        .select("email name status imagePath")
+        .lean();
       await session.commitTransaction();
       res.json({
         user: user,

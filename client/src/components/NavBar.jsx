@@ -49,9 +49,14 @@ export default function NavBar() {
       { name: "Dashboard", path: "admin/dashboard" },
       { name: "Logout", path: "/login", onClick: () => logoutUser(setUser) },
     ]);
-  } else if (user) {
+  } else if (user && user.status == "Accepted") {
     return createNavLinks([
       { name: "Dashboard", path: "/dashboard" },
+      { name: "Logout", path: "/login", onClick: () => logoutUser(setUser) },
+    ]);
+  } else if (user && user.status == "Refused") {
+    return createNavLinks([
+      { name: "Dashboard", path: "/refusedDashboard" },
       { name: "Logout", path: "/login", onClick: () => logoutUser(setUser) },
     ]);
   } else {
