@@ -1,5 +1,5 @@
-const https = require('https');
-const fs = require('fs');
+const https = require("https");
+const fs = require("fs");
 const express = require("express");
 const dotenv = require("dotenv").config();
 const mongoose = require("mongoose");
@@ -63,8 +63,8 @@ const PORT = 443;
 
 // Configuration pour le serveur HTTPS
 const httpsOptions = {
-  key: fs.readFileSync('server.key'), // Chemin vers la clé privée
-  cert: fs.readFileSync('server.cert'), // Chemin vers le certificat
+  key: fs.readFileSync("server.key"), // Chemin vers la clé privée
+  cert: fs.readFileSync("server.cert"), // Chemin vers le certificat
 };
 
 // Création du serveur HTTPS
@@ -84,3 +84,26 @@ const io = require("socket.io")(server, {
 
 // Utiliser le gestionnaire de sockets
 socketManager(io);
+
+// Cleanup
+process.on("SIGINT", cleanup);
+process.on("SIGTERM", cleanup);
+
+function cleanup() {
+  console.log("Cleaning up resources...");
+
+  // Close server
+  server.close(() => {
+    console.log("Server closed");
+  });
+
+  // Disconnect from database
+  mongoose.connection
+    .close()
+    .then(() => {
+      console.log("Database connection closed");
+    })
+    .catch((err) => {
+      console.log("Error closing database connection: ", err);
+    });
+}
