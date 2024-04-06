@@ -191,14 +191,30 @@ function VerifierPage() {
   const [showGenerateButton, setShowGenerateButton] = useState(false);
 
   useEffect(() => {
-    const storedVerifierId = localStorage.getItem("verifierId");
-    if (storedVerifierId) {
-      setVerifierId(storedVerifierId);
-      setShowGenerateButton(false);
-    } else {
-      setShowGenerateButton(true); // Afficher le bouton générer
-    }
+    const fetchVerifier = async () => {
+      const storedVerifierId = localStorage.getItem("verifierId");
+      if (storedVerifierId) {
+        try {
+          const response = await axios.get(`/verifiers/${storedVerifierId}`);
+          if (!response.data.exists) {
+            setShowGenerateButton(true);
+            localStorage.removeItem('verifierId');
+          } else {
+            setVerifierId(storedVerifierId);
+            setShowGenerateButton(false);
+          }
+        } catch (error) {
+          console.error("Erreur lors de la requête Axios :", error);
+          // Gérer l'erreur selon vos besoins
+        }
+      } else {
+        setShowGenerateButton(true);
+      }
+    };
+  
+    fetchVerifier(); // Appel de la fonction pour récupérer le vérificateur
   }, [verifierId]);
+  
 
   useEffect(() => {
     if (verifierId) {
@@ -255,6 +271,7 @@ function VerifierPage() {
 
         setVerifierId(newVerifierId);
         localStorage.setItem("verifierId", newVerifierId);
+        setShowGenerateButton(false);
       } else {
         throw new Error(
           "Erreur lors de la création de l'objet vérificateur: " +

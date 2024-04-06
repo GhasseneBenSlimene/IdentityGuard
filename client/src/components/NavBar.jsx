@@ -52,6 +52,7 @@ export default function NavBar() {
   } else if (user && user.status == "Accepted") {
     return createNavLinks([
       { name: "Dashboard", path: "/dashboard" },
+      { name: "Verifier", path: "/verifiers" },
       { name: "Logout", path: "/login", onClick: () => logoutUser(setUser) },
     ]);
   } else if (user && user.status == "Refused") {

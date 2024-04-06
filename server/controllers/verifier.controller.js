@@ -23,10 +23,9 @@ const verifyAcceptedSession = (req, res, next) => {
 
 exports.createVerifier = async (req, res) => {
   try {
-    const createdAt = new Date();
-    const expiration = new Date(createdAt.getTime() + 20 * 1000); // Ajoute 3600 secondes (en millisecondes) à la date de création
-    const verifier = await Verifier.create({ createdAt });
-    res.status(201).json({ verifierId: verifier.verifierId, expiration });
+    // Si des données de création de vérificateur sont nécessaires, assurez-vous de les passer à Verifier.create()
+    const verifier = await Verifier.create({});
+    res.status(201).json({ verifierId: verifier.verifierId });
   } catch (error) {
     console.error("Erreur lors de la création du vérificateur :", error);
     res
