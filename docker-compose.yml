@@ -24,10 +24,10 @@ services:
       - "8545:8545"
     networks:
       app_network:
-        ipv4_address: 172.20.0.4
+        ipv4_address: 172.21.0.4
 
 networks:
   app_network:
     ipam:
       config:
-        - subnet: 172.20.0.0/16
+        - subnet: 172.21.0.0/16
