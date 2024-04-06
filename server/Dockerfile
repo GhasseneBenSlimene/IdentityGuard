@@ -16,7 +16,7 @@ RUN npm install
 # Copiez le reste des fichiers de l'application
 COPY . .
 
-# Exposez le port sur lequel votre application s'exécute
+# Exposez le port
 EXPOSE 443
 
 # Définissez la commande pour exécuter votre application

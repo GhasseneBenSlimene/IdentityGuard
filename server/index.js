@@ -65,7 +65,7 @@ const httpsOptions = {
 const server = https.createServer(httpsOptions, app);
 
 // Lancement du serveur sur le port spécifié
-server.listen(PORT, () => {
+server.listen(PORT, "0.0.0.0", () => {
   console.log(`Server is running on port ${PORT}`);
 });
 
@@ -87,17 +87,8 @@ function cleanup() {
   console.log("Cleaning up resources...");
 
   // Close server
-  server.close(() => {
-    console.log("Server closed");
-  });
+  server.close();
 
   // Disconnect from database
-  mongoose.connection
-    .close()
-    .then(() => {
-      console.log("Database connection closed");
-    })
-    .catch((err) => {
-      console.log("Error closing database connection: ", err);
-    });
+  mongoose.connection.close();
 }

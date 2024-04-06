@@ -41,11 +41,14 @@ const verifyAdminSession = (req, res, next) => {
 const acceptUser = async (req, res, next) => {
   let session;
   try {
-    const { email, status, dateOfBirth } = req.body;
-    console.log("dateOfBirth: ", dateOfBirth);
-
     session = await User.startSession(); // Used to delete operations on db if file is not deleted
     session.startTransaction();
+    const { email, status, dateOfBirth } = req.body;
+    console.log("dateOfBirth: ", dateOfBirth);
+    if (!dateOfBirth) {
+      throw new Error("Date of birth is required");
+    }
+
     if (status === "Pending") {
       const { proof, publicSignals } = await ZKP(dateOfBirth);
 
@@ -63,7 +66,7 @@ const acceptUser = async (req, res, next) => {
       const user = await User.findOne({ email: email })
         .select("email name status imagePath")
         .lean();
-      deleteFile(`${dir}\\${user.imagePath}`);
+      deleteFile(`${dir}/${user.imagePath}`);
       await User.updateOne(
         { email: email },
         {
@@ -107,7 +110,7 @@ const refuseUser = async (req, res) => {
       const user = await User.findOne({ email: email })
         .select("email name status imagePath")
         .lean();
-      deleteFile(`${dir}\\${user.imagePath}`);
+      deleteFile(`${dir}/${user.imagePath}`);
       await User.updateOne(
         { email: email },
         {
@@ -141,15 +144,6 @@ const refuseUser = async (req, res) => {
       .catch((err) => console.error("Error ending session: ", err));
   }
 };
-
-// async function findUserAndUpdateState(email, newStatus) {
-//   return await User.findOneAndUpdate(
-//     { email: email },
-//     { $set: { status: newStatus, refuseReason:  } }
-//   )
-//     .select("email name status imagePath")
-//     .lean();
-// }
 
 module.exports = {
   getUsersInfo,
