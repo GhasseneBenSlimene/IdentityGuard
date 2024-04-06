@@ -38,6 +38,9 @@ app.use(express.json());
 app.use(cookieParser());
 app.use(express.urlencoded({ extended: false }));
 
+// parse email and name to lowercase
+app.use(require("./middlewares/toLowerCase"));
+
 // Middleware pour les CORS
 app.use(
   cors({
