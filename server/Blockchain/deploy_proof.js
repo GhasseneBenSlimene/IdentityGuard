@@ -23,8 +23,8 @@ async function deploy_proof(proof, inputs) {
         arguments: [proofa, proofb, proofc, inputs],
         }).send({
         from: accountNumber,
-        gas: '4700000',
-        gasPrice: 1000000
+        gas: '6000000', // Augmenter le gas limit
+        gasPrice: '2000000000' // Augmenter le gas price
     });
 
     console.log(deployedContract.options.address);

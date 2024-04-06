@@ -5,9 +5,10 @@ const dotenv = require("dotenv").config();
 const mongoose = require("mongoose");
 const cookieParser = require("cookie-parser");
 const cors = require("cors");
+const {Web3} = require('web3');
 const socketManager = require("./sockets/socketManager");
-const { verifyRefusedSession } = require("./controllers/refusedController");
 
+const { verifyRefusedSession } = require("./controllers/refusedController");
 const { verifyAdminSession } = require("./controllers/adminController");
 const { verifyAcceptedSession } = require("./controllers/verifier.controller");
 
@@ -62,7 +63,16 @@ app.use((error, req, res, next) => {
   res.status(500).send("Something broke!");
 });
 
-const PORT = 443;
+const web3 = new Web3('http://localhost:8545');
+
+
+web3.eth.getBlockNumber().then(blockNumber => {
+  console.log('Latest block number:', blockNumber);
+}).catch(error => {
+  console.error('Error while fetching latest block:', error);
+});
+
+const PORT = 8000;
 
 // Configuration pour le serveur HTTPS
 const httpsOptions = {

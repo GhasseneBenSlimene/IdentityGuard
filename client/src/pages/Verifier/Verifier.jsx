@@ -224,7 +224,7 @@ function VerifierPage() {
 
       newSocket.on("proof", async (proofData) => {
 
-        const address_test = "0x07cb37ebafa60db9e2391d5f9d8146f5ba11f70a";
+        const address_test = proofData;
         const contract = new web3.eth.Contract(contractProofABI, address_test);
 
         const proof = await contract.methods.getProof().call();

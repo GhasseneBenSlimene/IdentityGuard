@@ -26,8 +26,8 @@ async function verify_proof(address) {
         data: contractVerifier.bytecode,
         }).send({
         from: accountNumber,
-        gas: '4700000',
-        gasPrice:1000000
+        gas: '6000000', // Augmenter le gas limit
+        gasPrice: '2000000000' // Augmenter le gas price
     });
 
     const verif = await ContractVerif.methods.verifyProof(proof.a, proof.b, proof.c, inputs).call();
