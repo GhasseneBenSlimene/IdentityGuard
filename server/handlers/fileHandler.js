@@ -21,7 +21,7 @@ const deleteFile = (dir) => {
       return false; // File does not exist
     } else {
       console.error("Error deleting file: ", error);
-      throw error; // Propagate other errors up the call stack
+      return false;
     }
   }
 };
