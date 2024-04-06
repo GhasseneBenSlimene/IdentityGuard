@@ -34,24 +34,15 @@ app.use(
     origin: true,
   })
 );
-app.use(express.json());
 app.use(cookieParser());
-app.use(express.urlencoded({ extended: false }));
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
 
 // parse email and name to lowercase
 app.use(require("./middlewares/toLowerCase"));
 
-// Middleware pour les CORS
-app.use(
-  cors({
-    credentials: true,
-    origin: true, // Autoriser les requêtes depuis ce domaine
-  })
-);
-
 // Routes
 app.use("/", require("./routes/authRoutes"));
-
 app.use("/verifiers", require("./routes/verifier.routes"));
 app.use("/admin", verifyAdminSession, require("./routes/adminRoutes"));
 app.use("/refused", verifyRefusedSession, require("./routes/refusedRoutes"));
