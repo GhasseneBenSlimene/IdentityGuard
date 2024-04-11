@@ -2,7 +2,6 @@ import React, { useContext, useState, useEffect } from "react";
 import { UserContext } from "../../context/userContext";
 import axios from "axios";
 import toast from "react-hot-toast";
-import { Input } from "../../components/Input";
 import { logoutUser } from "../Auth/utils/auth";
 import { useNavigate } from "react-router-dom";
 
@@ -10,21 +9,36 @@ const RefusedDashboard = () => {
   const { user, setUser } = useContext(UserContext);
   const navigate = useNavigate();
   const [selectedFile, setSelectedFile] = useState(null);
+  const [fileName, setFileName] = useState("");
+  const [imagePreview, setImagePreview] = useState(null); // State for storing image preview URL
   const [refuseReason, setRefuseReason] = useState("");
 
   useEffect(() => {
-    const fetchReason = async () => {
-      const response = await axios.post("/refused/getReason", {
-        email: user.email,
-      });
-      setRefuseReason(response.data.refuseReason);
-    };
+    if (user) {
+      const fetchReason = async () => {
+        const response = await axios.post("/refused/getReason", {
+          email: user.email,
+        });
+        setRefuseReason(response.data.refuseReason);
+      };
 
-    fetchReason();
-  }, []);
+      fetchReason();
+    }
+  }, [user]);
 
   const handleFileChange = (event) => {
-    setSelectedFile(event.target.files[0]);
+    const file = event.target.files[0];
+    if (file) {
+      setSelectedFile(file);
+      setFileName(file.name);
+
+      // Create an image preview
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        setImagePreview(reader.result);
+      };
+      reader.readAsDataURL(file);
+    }
   };
 
   const handleSubmit = async (event) => {
@@ -45,6 +59,8 @@ const RefusedDashboard = () => {
         },
       });
       toast.success("Identity card submitted successfully.");
+      logoutUser(setUser);
+      navigate("/");
     } catch (error) {
       console.error("Error submitting identity card:", error);
       toast.error("Failed to submit identity card.");
@@ -68,25 +84,28 @@ const RefusedDashboard = () => {
         <br />
         Reason: {refuseReason || "No specific reason provided."}
       </div>
-      <form
-        onSubmit={(e) => {
-          handleSubmit(e);
-          logoutUser(setUser);
-          navigate("/");
-        }}
-      >
-        <div className="form-group">
-          <label htmlFor="identityCardInput">
-            Resubmit your identity card:
-          </label>
-          <Input
+      <form onSubmit={handleSubmit}>
+        <div className="custom-file mb-3">
+          <input
+            id="identityCardInput"
             type="file"
+            className="custom-file-input"
             name="image"
             accept="image/*"
-            label="Identity card image"
             onChange={handleFileChange}
           />
         </div>
+        {imagePreview && (
+          <div className="image-preview mb-3">
+            <img
+              src={imagePreview}
+              alt="Preview"
+              className="img-thumbnail"
+              width="300"
+              height="170"
+            />
+          </div>
+        )}
         <button type="submit" className="btn btn-primary">
           Submit
         </button>
