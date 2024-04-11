@@ -9,19 +9,11 @@ import Projects from "./components/projects/Projects.jsx";
 import Resume from "./components/resume/Resume.jsx";
 import Testimonial from "./components/tesimonial/Testimonial.jsx";
 export default function Home() {
-
   return (
     <div className="w-full h-auto bg-bodyColor text-lightText px-4">
-        <Navbar />
       <div className="max-w-screen-xl mx-auto">
         <Banner />
         <Features />
-        <Projects />
-        <Resume />
-        <Testimonial />
-        <Contact />
-        <Footer />
-        <FooterBottom />
       </div>
     </div>
   );
