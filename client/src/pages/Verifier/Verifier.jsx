@@ -34,58 +34,16 @@ const contractProofABI = [
     "type": "constructor"
   },
   {
-    "inputs": [
-      {
-        "internalType": "uint256",
-        "name": "",
-        "type": "uint256"
-      }
-    ],
-    "name": "inputs",
+    "inputs": [],
+    "name": "getInputs",
     "outputs": [
       {
-        "internalType": "uint256",
+        "internalType": "uint256[]",
         "name": "",
-        "type": "uint256"
+        "type": "uint256[]"
       }
     ],
     "stateMutability": "view",
-    "type": "function"
-  },
-  {
-    "inputs": [
-      {
-        "internalType": "uint256[]",
-        "name": "_a",
-        "type": "uint256[]"
-      },
-      {
-        "internalType": "uint256[][]",
-        "name": "_b",
-        "type": "uint256[][]"
-      },
-      {
-        "internalType": "uint256[]",
-        "name": "_c",
-        "type": "uint256[]"
-      }
-    ],
-    "name": "setProof",
-    "outputs": [],
-    "stateMutability": "nonpayable",
-    "type": "function"
-  },
-  {
-    "inputs": [
-      {
-        "internalType": "uint256[]",
-        "name": "_inputs",
-        "type": "uint256[]"
-      }
-    ],
-    "name": "setInputs",
-    "outputs": [],
-    "stateMutability": "nonpayable",
     "type": "function"
   },
   {
@@ -119,16 +77,58 @@ const contractProofABI = [
     "type": "function"
   },
   {
-    "inputs": [],
-    "name": "getInputs",
+    "inputs": [
+      {
+        "internalType": "uint256",
+        "name": "",
+        "type": "uint256"
+      }
+    ],
+    "name": "inputs",
     "outputs": [
       {
-        "internalType": "uint256[]",
+        "internalType": "uint256",
         "name": "",
-        "type": "uint256[]"
+        "type": "uint256"
       }
     ],
     "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "uint256[]",
+        "name": "_inputs",
+        "type": "uint256[]"
+      }
+    ],
+    "name": "setInputs",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "uint256[]",
+        "name": "_a",
+        "type": "uint256[]"
+      },
+      {
+        "internalType": "uint256[][]",
+        "name": "_b",
+        "type": "uint256[][]"
+      },
+      {
+        "internalType": "uint256[]",
+        "name": "_c",
+        "type": "uint256[]"
+      }
+    ],
+    "name": "setProof",
+    "outputs": [],
+    "stateMutability": "nonpayable",
     "type": "function"
   }
 ];
@@ -170,7 +170,11 @@ const contractVerifABI = [
   }
 ];
 
-const web3 = new Web3("http://localhost:8545");
+const web3 = new Web3(
+  new Web3.providers.HttpProvider(
+    `https://sepolia.infura.io/v3/41236084bd704280905e270666af92ff`,
+  ),
+);
 
 
 function Proof({ proof, onVerifyAnother }) {
@@ -223,27 +227,25 @@ function VerifierPage() {
       newSocket.emit("joinVerifier", verifierId);
 
       newSocket.on("proof", async (proofData) => {
-
-        const address_test = "0x07cb37ebafa60db9e2391d5f9d8146f5ba11f70a";
-        const contract = new web3.eth.Contract(contractProofABI, address_test);
+        const contract = new web3.eth.Contract(contractProofABI, proofData);
 
         const proof = await contract.methods.getProof().call();
 
         const inputs = await contract.methods.getInputs().call();
 
-        const address_verif = "0xb2f6884f76f1b0cd3c056c939cdfe6df84a97fb8";
+        const address_verif = "0x1d50c589c9B16a8459fA3BCf278428991C8E7fDb";
         const contractVerif = new web3.eth.Contract(contractVerifABI, address_verif);
 
 
-
-        //const verif = await contractVerif.methods.verifyProof(proof.a, proof.b, proof.c, inputs).call();
+        //const verif = await contractVerif.methods.verifyProof(proofa, proofb, proofc, inputs).call();
         //console.log(verif);
     if(true){
         if(inputs[0] == 1){
             const proofData = "la verification est valide";
             setProof(proofData);
         }else{
-            console.log("l'age est inferieur à 18 ans");
+            const proofData = "l'age est inferieur à 18 ans";
+            setProof(proofData);
         }
     } else {
         console.log("la preuve est incorrecte");
