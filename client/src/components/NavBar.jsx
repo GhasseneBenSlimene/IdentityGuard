@@ -4,67 +4,61 @@ import { UserContext } from "../context/userContext";
 import { logoutUser } from "../pages/Auth/utils/auth";
 
 export default function NavBar() {
-  const { user, setUser } = useContext(UserContext);
+ const { user, setUser } = useContext(UserContext);
 
-  const createNavLinks = (items) => {
+ const createNavLinks = (items) => {
     return (
-      <nav className="navbar navbar-expand-lg bg-body-tertiary">
+      <nav className="bg-gray-800 p-1 mt-0 w-full">
         <div className="container-fluid">
-          <Link className="navbar-brand" to="/">
+          <Link className="navbar-brand text-white font-extrabold text-6xl"  to="/">
             IdentityGuard
           </Link>
-          <button
-            className="navbar-toggler"
-            type="button"
-            data-bs-toggle="collapse"
-            data-bs-target="#navbarNavAltMarkup"
-            aria-controls="navbarNavAltMarkup"
-            aria-expanded="false"
-            aria-label="Toggle navigation"
-          >
-            <span className="navbar-toggler-icon"></span>
-          </button>
-          <div className="collapse navbar-collapse" id="navbarNavAltMarkup">
-            <div className="navbar-nav">
+          </div>
+        <div className="container mx-auto flex flex-wrap items-center justify-between">
+          
+          <div className="flex justify-end space-x-4">
+            <ul className="flex items-center space-x-4">
               {items.map(({ name, path, onClick }, index) => {
                 return (
-                  <NavLink
-                    className="nav-item nav-link"
-                    to={path}
-                    key={index}
-                    onClick={onClick}
-                  >
-                    {name}
-                  </NavLink>
+                 <li key={index}>
+                    <NavLink
+                      className="inline-block py-2 px-4 text-black no-underline hover:bg-designColor rounded font-bodyFont"
+                      to={path}
+                      onClick={onClick}
+                    >
+                      {name}
+                    </NavLink>
+                 </li>
                 );
               })}
-            </div>
+            </ul>
           </div>
         </div>
       </nav>
     );
-  };
-  if (user && user.admin) {
+ };
+
+ if (user && user.admin) {
     return createNavLinks([
       { name: "Dashboard", path: "admin/dashboard" },
       { name: "Logout", path: "/login", onClick: () => logoutUser(setUser) },
     ]);
-  } else if (user && user.status == "Accepted") {
+ } else if (user && user.status == "Accepted") {
     return createNavLinks([
       { name: "Dashboard", path: "/dashboard" },
       { name: "Verifier", path: "/verifiers" },
       { name: "Logout", path: "/login", onClick: () => logoutUser(setUser) },
     ]);
-  } else if (user && user.status == "Refused") {
+ } else if (user && user.status == "Refused") {
     return createNavLinks([
       { name: "Dashboard", path: "/refusedDashboard" },
       { name: "Logout", path: "/login", onClick: () => logoutUser(setUser) },
     ]);
-  } else {
+ } else {
     return createNavLinks([
       { name: "Login", path: "/login" },
       { name: "Register", path: "/register" },
       { name: "Verifier", path: "/verifiers" },
     ]);
-  }
+ }
 }

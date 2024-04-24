@@ -36,7 +36,7 @@ export default function Login() {
   };
 
   return (
-    <div className="d-flex justify-content-center align-items-center">
+    <div className="d-flex justify-content-center align-items-center bg-bodyColor " style={{ minHeight: '100vh' }}>
       <form className="col-5 mt-5" onSubmit={handleLogin}>
         <Input
           type="email"
