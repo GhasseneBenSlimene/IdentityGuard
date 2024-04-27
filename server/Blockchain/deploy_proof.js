@@ -3,8 +3,6 @@ const { Web3 } = require("web3");
 
 const contractProofAge = require("./build/contracts/ProofContract.json");
 
-const contractProofAge = require("./build/contracts/ProofContract.json");
-
 const web3 = new Web3(
   new Web3.providers.HttpProvider(
     `https://sepolia.infura.io/v3/41236084bd704280905e270666af92ff`
