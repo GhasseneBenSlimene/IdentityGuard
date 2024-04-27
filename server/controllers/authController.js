@@ -33,12 +33,10 @@ const loginUser = async (req, res) => {
     }
     if (match) {
       if (userToSign.status === "Pending") {
-        return res
-          .status(403)
-          .json({
-            error: "Your account is pending approval.",
-            status: "Pending",
-          });
+        return res.status(403).json({
+          error: "Your account is pending approval.",
+          status: "Pending",
+        });
       }
       return jwt.sign(userToSign, process.env.JWT_SECRET, {}, (err, token) => {
         if (err)
@@ -100,6 +98,7 @@ const registerUser = async (req, res) => {
       status: "Pending",
       imagePath: file.filename,
       refuseReason: "",
+      address: "",
     });
 
     const userResponse = await User.findById(user._id).select("name email");

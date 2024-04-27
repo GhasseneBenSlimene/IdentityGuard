@@ -47,11 +47,18 @@ export default function NavBar() {
   if (user && user.admin) {
     return createNavLinks([
       { name: "Dashboard", path: "admin/dashboard" },
+      { name: "Verifier", path: "/verifiers" },
       { name: "Logout", path: "/login", onClick: () => logoutUser(setUser) },
     ]);
-  } else if (user) {
+  } else if (user && user.status == "Accepted") {
     return createNavLinks([
       { name: "Dashboard", path: "/dashboard" },
+      { name: "Verifier", path: "/verifiers" },
+      { name: "Logout", path: "/login", onClick: () => logoutUser(setUser) },
+    ]);
+  } else if (user && user.status == "Refused") {
+    return createNavLinks([
+      { name: "Dashboard", path: "/refusedDashboard" },
       { name: "Logout", path: "/login", onClick: () => logoutUser(setUser) },
     ]);
   } else {

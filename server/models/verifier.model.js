@@ -7,12 +7,6 @@ const verifierSchema = mongoose.Schema(
       type: String,
       unique: true,
     },
-    createdAt: {
-      type: Date,
-      expires: 3600,
-      default: Date.now,
-      required: true,
-    },
   }
 );
 

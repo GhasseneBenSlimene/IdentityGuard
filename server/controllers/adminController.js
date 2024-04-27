@@ -1,6 +1,8 @@
 const User = require("../models/user");
 const jwt = require("jsonwebtoken");
-const ZKP = require("../ZKP/generate_proof");
+const ZKP = require("../ZKP/generate_proof_snarkjs");
+const deploy_proof = require("../Blockchain/deploy_proof");
+const verify_proof = require("../Blockchain/verify_proof");
 const { deleteFile, dir } = require("../handlers/fileHandler");
 
 const getUsersInfo = async (req, res) => {
@@ -36,16 +38,66 @@ const verifyAdminSession = (req, res, next) => {
   }
 };
 
-const acceptUser = (req, res, next) => {
+const acceptUser = async (req, res, next) => {
+  let session;
   try {
-    const { email, dateOfBirth } = req.body;
-    console.log(dateOfBirth);
-    const status = "Accepted";
+    session = await User.startSession(); // Used to delete operations on db if file is not deleted
+    session.startTransaction();
+    const { email, status, dateOfBirth } = req.body;
     console.log("dateOfBirth: ", dateOfBirth);
-    // const proof = ZKP(dateOfBirth);
-    // const N_transaction=BC(proof);
-    res.json({});
-  } catch (error) {}
+    if (!dateOfBirth) {
+      throw new Error("Date of birth is required");
+    }
+
+    if (status === "Pending") {
+      const { proof, publicSignals } = await ZKP(dateOfBirth);
+
+      const address = await deploy_proof(proof, publicSignals);
+
+      await User.updateOne(
+        { email: email },
+        {
+          $set: {
+            address: address,
+          },
+        }
+      );
+      const newStatus = "Accepted";
+      const user = await User.findOne({ email: email })
+        .select("email name status imagePath")
+        .lean();
+      deleteFile(`${dir}/${user.imagePath}`);
+      await User.updateOne(
+        { email: email },
+        {
+          $set: {
+            status: newStatus,
+            imagePath: "",
+          },
+        }
+      )
+        .select("email name status imagePath")
+        .lean();
+      await session.commitTransaction();
+      res.json({
+        user: user,
+        message: "User status has been successfully updated to 'Accepted'.",
+      });
+    } else {
+      await session.abortTransaction();
+      res.status(400).json({ error: "User is not in Pending state" });
+    }
+  } catch (error) {
+    console.log("Error in refuseUser: ", error);
+    await session.abortTransaction();
+    res
+      .status(500)
+      .json({ error: "accepte user error, please try again later." });
+  } finally {
+    session
+      .endSession()
+      .catch((err) => console.error("Error ending session: ", err));
+  }
 };
 
 const refuseUser = async (req, res) => {
@@ -55,18 +107,26 @@ const refuseUser = async (req, res) => {
     const { email, status, refuseReason } = req.body;
     if (status === "Pending") {
       const newStatus = "Refused";
-      const user = await User.findOneAndUpdate(
+      const user = await User.findOne({ email: email })
+        .select("email name status imagePath")
+        .lean();
+      deleteFile(`${dir}/${user.imagePath}`);
+      await User.updateOne(
         { email: email },
-        { $set: { status: newStatus, refuseReason: refuseReason } }
-        // { $set: { refuseReason: refuseReason } }
+        {
+          $set: {
+            status: newStatus,
+            refuseReason: refuseReason,
+            imagePath: "",
+          },
+        }
       )
         .select("email name status imagePath")
         .lean();
-      deleteFile(`${dir}\\${user.imagePath}`);
       await session.commitTransaction();
       res.json({
         user: user,
-        message: "User status has been successfully updated to 'Refused'.",
+        message: "User status has beenf successfully updated to 'Refused'.",
       });
     } else {
       await session.abortTransaction();
@@ -84,15 +144,6 @@ const refuseUser = async (req, res) => {
       .catch((err) => console.error("Error ending session: ", err));
   }
 };
-
-// async function findUserAndUpdateState(email, newStatus) {
-//   return await User.findOneAndUpdate(
-//     { email: email },
-//     { $set: { status: newStatus, refuseReason:  } }
-//   )
-//     .select("email name status imagePath")
-//     .lean();
-// }
 
 module.exports = {
   getUsersInfo,

@@ -21,6 +21,16 @@ export function UserContextProvider({ children }) {
       });
   }, []);
 
+  if (loading) {
+    return (
+      <div className="d-flex justify-content-center">
+        <div className="spinner-border m-5" role="status">
+          <span className="sr-only">Loading...</span>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <UserContext.Provider value={{ user, setUser, loading }}>
       {children}
