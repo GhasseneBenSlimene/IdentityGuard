@@ -1,20 +1,21 @@
 import { useState } from "react";
 import { registerUser } from "./utils/auth";
 import { Input } from "../../components/Input";
+import './Register.css'; // Import the custom CSS file
 
 export default function Register() {
-  const [isRegistered, setIsRegistered] = useState(false);
-  const [data, setData] = useState({
+ const [isRegistered, setIsRegistered] = useState(false);
+ const [data, setData] = useState({
     name: "",
     email: "",
     password: "",
     image: "",
-  });
-  const [fileName, setFileName] = useState(""); // Ajouté pour stocker le nom du fichier
-  const [imagePreview, setImagePreview] = useState(""); // State to hold the preview URL
+ });
+ const [fileName, setFileName] = useState(""); // Added to store the file name
+ const [imagePreview, setImagePreview] = useState(""); // State to hold the preview URL
 
-  const handleRegister = async (e) => {
-    e.preventDefault(); // Ajouté pour prévenir le rechargement de la page
+ const handleRegister = async (e) => {
+    e.preventDefault(); // Added to prevent page reload
     if (await registerUser(e, data)) {
       setData({
         name: "",
@@ -26,9 +27,9 @@ export default function Register() {
       setImagePreview(false);
       setIsRegistered(true);
     }
-  };
+ };
 
-  const handleChange = (e) => {
+ const handleChange = (e) => {
     const { name, value, files } = e.target;
     if (name === "image") {
       const file = files[0];
@@ -48,11 +49,11 @@ export default function Register() {
     } else {
       setData({ ...data, [name]: value });
     }
-  };
+ };
 
-  return (
-    <div className="d-flex justify-content-center align-items-center bg-bodyColor" style={{ minHeight: '100vh' }}>
-      <form className="col-5 mt-5" onSubmit={handleRegister}>
+ return (
+    <div className="register-container">
+      <form className="register-form" onSubmit={handleRegister}>
         <Input
           type="text"
           name="name"
@@ -74,15 +75,18 @@ export default function Register() {
           value={data.password}
           onChange={handleChange}
         />
-        <div className="custom-file mt-3">
+        <div className="file-input-container mt-3">
           <input
             type="file"
-            className="custom-file-input"
+            className="file-input"
             id="image"
             name="image"
             accept="image/*"
             onChange={handleChange}
           />
+          <label htmlFor="image" className="file-input-label text-center">
+            {fileName ? "Fichier téléchargé ✅" : "Choisir un fichier"}
+          </label>
         </div>
         {imagePreview && ( // Display image preview if available
           <div className="image-preview mt-3">
@@ -95,18 +99,15 @@ export default function Register() {
             />
           </div>
         )}
-        <button type="submit" className="btn btn-primary mt-3">
+        <button type="submit" className="register-button mt-3">
           Submit
         </button>
         {isRegistered && (
-          <div className="alert alert-success mt-3" role="alert">
-            Congratulations on successfully registering!
-            <br /> An administrator will review your information shortly. Once
-            approved, you can then log in to your account. Thank you for your
-            patience.
+          <div className="register-alert mt-3" role="alert">
+            Congratulations on successfully registering! An administrator will review your information shortly. Once approved, you can then log in to your account. Thank you for your patience.
           </div>
         )}
       </form>
     </div>
-  );
+ );
 }
