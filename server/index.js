@@ -40,10 +40,10 @@ app.use(express.urlencoded({ extended: true }));
 app.use(require("./middlewares/toLowerCase"));
 
 // Routes
-app.use("/", require("./routes/authRoutes"));
-app.use("/verifiers", require("./routes/verifier.routes"));
-app.use("/admin", verifyAdminSession, require("./routes/adminRoutes"));
-app.use("/refused", verifyRefusedSession, require("./routes/refusedRoutes"));
+app.use("api/", require("./routes/authRoutes"));
+app.use("api/verifiers", require("./routes/verifier.routes"));
+app.use("api/admin", verifyAdminSession, require("./routes/adminRoutes"));
+app.use("api/refused", verifyRefusedSession, require("./routes/refusedRoutes"));
 
 // Error handling
 app.use((error, req, res, next) => {
