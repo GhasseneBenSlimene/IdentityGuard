@@ -140,5 +140,7 @@ dist
 *.sln
 *.sw?
 
-# User uploaded files
+# my ignore
 uploads 
+server.cert
+server.key

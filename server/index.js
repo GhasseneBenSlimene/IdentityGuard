@@ -1,5 +1,3 @@
-const https = require("https");
-const fs = require("fs");
 const express = require("express");
 const dotenv = require("dotenv").config();
 const mongoose = require("mongoose");
@@ -11,9 +9,9 @@ const { verifyRefusedSession } = require("./controllers/refusedController");
 const { verifyAdminSession } = require("./controllers/adminController");
 const { verifyAcceptedSession } = require("./controllers/verifier.controller");
 
-const app = express(); // Utilisation de la fonction express pour créer l'application
+const app = express();
 
-// Middleware pour logger les requêtes reçues
+// Middleware to log received requests
 app.use((req, res, next) => {
   console.log(
     `A ${req.method} request received at ${new Date().toISOString()}`
@@ -21,24 +19,24 @@ app.use((req, res, next) => {
   next();
 });
 
-// Connexion à la base de données
+// Database connection
 mongoose
   .connect(process.env.MONGO_URL)
   .then(() => console.log("Database connected"))
   .catch((error) => console.error("Database not connected ", error));
 
-// middleware
+// Middleware
 app.use(
   cors({
     credentials: true,
-    origin: true,
+    origin: process.env.CORS_ORIGIN, // Specify your frontend's domain or use "*" with caution
   })
 );
 app.use(cookieParser());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-// parse email and name to lowercase
+// Convert email and name to lowercase
 app.use(require("./middlewares/toLowerCase"));
 
 // Routes
@@ -47,36 +45,27 @@ app.use("/verifiers", require("./routes/verifier.routes"));
 app.use("/admin", verifyAdminSession, require("./routes/adminRoutes"));
 app.use("/refused", verifyRefusedSession, require("./routes/refusedRoutes"));
 
-// Gestion des erreurs
+// Error handling
 app.use((error, req, res, next) => {
   console.error(error.stack);
   res.status(500).send("Something broke!");
 });
 
-const PORT = 443;
+const PORT = process.env.PORT || 5000; // Use a non-privileged port
 
-// Configuration pour le serveur HTTPS
-const httpsOptions = {
-  key: fs.readFileSync("server.key"), // Chemin vers la clé privée
-  cert: fs.readFileSync("server.cert"), // Chemin vers le certificat
-};
-
-// Création du serveur HTTPS
-const server = https.createServer(httpsOptions, app);
-
-// Lancement du serveur sur le port spécifié
-server.listen(PORT, "0.0.0.0", () => {
+// Start the server on the specified port
+const server = app.listen(PORT, () => {
   console.log(`Server is running on port ${PORT}`);
 });
 
 const io = require("socket.io")(server, {
   cors: {
-    origin: true, // Autoriser les requêtes depuis ce domaine
-    methods: ["GET", "POST"], // Méthodes HTTP autorisées
+    origin: process.env.CORS_ORIGIN, // Specify your frontend's domain
+    methods: ["GET", "POST"],
   },
 });
 
-// Utiliser le gestionnaire de sockets
+// Use socket manager
 socketManager(io);
 
 // Cleanup
@@ -87,8 +76,13 @@ function cleanup() {
   console.log("Cleaning up resources...");
 
   // Close server
-  server.close();
+  server.close(() => {
+    console.log("Server closed");
 
-  // Disconnect from database
-  mongoose.connection.close();
+    // Disconnect from database
+    mongoose.connection.close(false, () => {
+      console.log("MongoDb connection closed");
+      process.exit(0);
+    });
+  });
 }
