@@ -219,7 +219,7 @@ function VerifierPage() {
 
   useEffect(() => {
     if (verifierId) {
-      const newSocket = io(import.meta.env.VITE_API_URL);
+      const newSocket = io("https://identityguard.me");
       setSocket(newSocket);
       newSocket.emit("joinVerifier", verifierId);
 

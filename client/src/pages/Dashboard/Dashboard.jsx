@@ -57,9 +57,7 @@ export default function Dashboard() {
   }, [scannedQrCode, method]);
 
   useEffect(() => {
-    const newSocket = io(
-      import.meta.env.VITE_API_URL + import.meta.env.VITE_SOCKET_PORT
-    );
+    const newSocket = io("https://identityguard.me");
     setSocket(newSocket);
 
     newSocket.on("error_message", (message) => {
@@ -105,8 +103,8 @@ export default function Dashboard() {
       // Contraintes pour accéder à la caméra arrière
       const constraints = {
         video: {
-          facingMode: "environment" // Utilise la caméra arrière
-        }
+          facingMode: "environment", // Utilise la caméra arrière
+        },
       };
 
       navigator.mediaDevices
@@ -157,7 +155,6 @@ export default function Dashboard() {
   }
 
   return (
-
     <div className="container">
       <h1>Welcome to your dashboard, {user && user.name}</h1>
       {!showAgeProofOptions && (
