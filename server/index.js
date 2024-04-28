@@ -51,7 +51,7 @@ app.use((error, req, res, next) => {
   res.status(500).send("Something broke!");
 });
 
-const PORT = process.env.PORT || 5000; // Use a non-privileged port
+const PORT = process.env.PORT || 5000;
 
 // Start the server on the specified port
 const server = app.listen(PORT, () => {
@@ -60,7 +60,7 @@ const server = app.listen(PORT, () => {
 
 const io = require("socket.io")(server, {
   cors: {
-    origin: process.env.CORS_ORIGIN, // Specify your frontend's domain
+    origin: process.env.CORS_ORIGIN,
     methods: ["GET", "POST"],
   },
 });
