@@ -18,7 +18,7 @@ const LeftBanner = () => {
   return (
     <div className="w-full lgl:w-3/5 flex flex-col gap-20">
       <div className="flex flex-col gap-5">
-        <h4 className=" text-lg font-normal">IdentityGuard</h4>
+      
         <h1 className="text-6xl font-bold text-black">
           Avec la technologie{" "}
           <span className="text-designColor capitalize">ZKP</span>
