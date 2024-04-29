@@ -316,7 +316,7 @@ function VerifierPage() {
   };
 
   return (
-    <div className="container">
+    <div className="container bg-bodyColor" style={{ minHeight: '100vh' }}>
       <h1>Vérifier un client</h1>
       {proof ? (
         <Proof proof={proof} onVerifyAnother={handleVerifyAnother} />

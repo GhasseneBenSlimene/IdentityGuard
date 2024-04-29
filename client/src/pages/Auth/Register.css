@@ -1,0 +1,90 @@
+/* Register.css */
+.register-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    background-color: #f5f5f5;
+   }
+   
+   .register-form {
+    width: 400px;
+    padding: 40px;
+    background-color: #ffffff;
+    border-radius: 10px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+   }
+   
+   .register-title {
+    text-align: center;
+    margin-bottom: 30px;
+    font-size: 24px;
+    font-weight: bold;
+   }
+   
+   .file-input-container {
+    position: relative;
+   }
+   
+   .file-input {
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 20px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    font-size: 16px;
+    opacity: 0;
+    cursor: pointer;
+   }
+   
+   .file-input-label {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 60%;
+    height: 60%;
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    background-color: #2d3748;
+    cursor: pointer;
+    font-size: 14px; /* Adjusted font size to make the button smaller */
+    transition: background-color 0.3s ease, color 0.3s ease;
+    color: #000000; /* Changed color to make it more attractive */
+   }
+   
+   .file-input-label:hover {
+    background-color: #e8e8e8;
+    color: #0056b3; /* Darker color on hover for better contrast */
+   }
+   
+   .register-button-container {
+    display: flex;
+    justify-content: center;
+   }
+   
+   .register-button {
+    width: 100%;
+    padding: 10px;
+    background-color: #007bff;
+    color: #ffffff;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 16px;
+    transition: background-color 0.3s ease;
+   }
+   
+   .register-button:hover {
+    background-color: #0056b3;
+   }
+   
+   .register-alert {
+    margin-top: 20px;
+    padding: 10px;
+    border-radius: 5px;
+    background-color: #d4edda;
+    color: #155724;
+    font-size: 14px;
+   }
+   

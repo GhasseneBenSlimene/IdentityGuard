@@ -1,6 +1,6 @@
 /** @type {import('tailwindcss').Config} */
 module.exports = {
-  content: ["./src/client/pages/*.{js,jsx,ts,tsx}"],
+  content: ["./src/**/*.{js,jsx,ts,tsx}"],
   theme: {
     extend: {
       screens: {
@@ -18,15 +18,12 @@ module.exports = {
         titleFont: ["Montserrat", "sans-serif"],
       },
       colors: {
-        bodyColor: "#FFFFFF", // Dark bluish-gray (base)
-        lightText: "#007bff", // Light grayish-white for readability
+        bodyColor: "#f5f5f5", // Dark bluish-gray (base)
+        lightText: "#000000", // Light grayish-white for readability
         boxBg: "linear-gradient(145deg, #1e2024, #23272b)", // Subtle gradient for boxes
         designColor: "#007bff", // Royal blue accent color (complementary)
-        primary: "#ffc107", // Gold for primary elements (optional)
-        secondary: "#000000", // Light coral for secondary elements (optional)
-      },
-      boxShadow: {
-        shadowOne: "10px 10px 19px #1c1e22, -10px -10px 19px #262a2e",
+        primary: "#000000", // Gold for primary elements (optional)
+        secondary: "#FFFFFF", // Light coral for secondary elements (optional)
       },
     },
   },

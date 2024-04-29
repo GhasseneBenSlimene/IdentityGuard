@@ -3,20 +3,21 @@ import { UserContext } from "../../context/userContext";
 import { useNavigate } from "react-router-dom";
 import { loginUser } from "./utils/auth";
 import { Input } from "../../components/Input";
+import './Login.css'; // Import the custom CSS file
 
 export default function Login() {
-  const { setUser } = useContext(UserContext);
-  const navigate = useNavigate();
-  const [data, setData] = useState({
+ const { setUser } = useContext(UserContext);
+ const navigate = useNavigate();
+ const [data, setData] = useState({
     email: "",
     password: "",
-  });
-  const [isPending, setIsPending] = useState(false);
+ });
+ const [isPending, setIsPending] = useState(false);
 
-  const handleChange = (e) =>
+ const handleChange = (e) =>
     setData({ ...data, [e.target.name]: e.target.value });
 
-  const handleLogin = async (e) => {
+ const handleLogin = async (e) => {
     e.preventDefault();
     const { isLoggedIn, isAdmin, user, status } = await loginUser(data);
     if (isLoggedIn) {
@@ -33,17 +34,19 @@ export default function Login() {
       setData({});
       setIsPending(true);
     }
-  };
+ };
 
-  return (
-    <div className="d-flex justify-content-center align-items-center">
-      <form className="col-5 mt-5" onSubmit={handleLogin}>
+ return (
+    <div className="login-container">
+      <form className="login-form" onSubmit={handleLogin}>
+        <h2 className="login-title">Login</h2>
         <Input
           type="email"
           name="email"
           label="Email address"
           value={data.email}
           onChange={handleChange}
+          className="login-input"
         />
         <Input
           type="password"
@@ -51,19 +54,20 @@ export default function Login() {
           label="Password"
           value={data.password}
           onChange={handleChange}
+          className="login-input"
         />
-        <button type="submit" className="btn btn-primary">
-          Submit
-        </button>
+        <div className="login-button-container">
+          <button type="submit" className="login-button">
+            Submit
+          </button>
+        </div>
         {isPending && (
-          <div className="alert alert-warning mt-3" role="alert">
-            Your account is pending approval.
-            <br /> An administrator will review your information shortly. Once
-            approved, you can then log in to your account. Thank you for your
-            patience.
+          <div className="login-alert">
+            Your account is pending approval. An administrator will review your information shortly. Once approved, you can then log in to your account. Thank you for your patience.
           </div>
         )}
       </form>
     </div>
-  );
+ );
 }
+
