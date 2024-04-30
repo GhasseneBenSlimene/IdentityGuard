@@ -3,21 +3,21 @@ import { UserContext } from "../../context/userContext";
 import { useNavigate } from "react-router-dom";
 import { loginUser } from "./utils/auth";
 import { Input } from "../../components/Input";
-import './Login.css'; // Import the custom CSS file
+import "./Login.css"; // Import the custom CSS file
 
 export default function Login() {
- const { setUser } = useContext(UserContext);
- const navigate = useNavigate();
- const [data, setData] = useState({
+  const { setUser } = useContext(UserContext);
+  const navigate = useNavigate();
+  const [data, setData] = useState({
     email: "",
     password: "",
- });
- const [isPending, setIsPending] = useState(false);
+  });
+  const [isPending, setIsPending] = useState(false);
 
- const handleChange = (e) =>
+  const handleChange = (e) =>
     setData({ ...data, [e.target.name]: e.target.value });
 
- const handleLogin = async (e) => {
+  const handleLogin = async (e) => {
     e.preventDefault();
     const { isLoggedIn, isAdmin, user, status } = await loginUser(data);
     if (isLoggedIn) {
@@ -34,10 +34,10 @@ export default function Login() {
       setData({});
       setIsPending(true);
     }
- };
+  };
 
- return (
-    <div className="login-container pt-36">
+  return (
+    <div className="login-container pt-26">
       <form className="login-form" onSubmit={handleLogin}>
         <h2 className="login-title">Login</h2>
         <Input
@@ -63,11 +63,12 @@ export default function Login() {
         </div>
         {isPending && (
           <div className="login-alert">
-            Your account is pending approval. An administrator will review your information shortly. Once approved, you can then log in to your account. Thank you for your patience.
+            Your account is pending approval. An administrator will review your
+            information shortly. Once approved, you can then log in to your
+            account. Thank you for your patience.
           </div>
         )}
       </form>
     </div>
- );
+  );
 }
-
