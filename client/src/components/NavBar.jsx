@@ -20,8 +20,8 @@ export default function NavBar() {
         </div>
         <div className="container mx-auto my-8 flex flex-wrap items-center justify-between">
 
-          <div className="flex justify-end space-x-4">
-            <ul className="flex items-center space-x-4">
+          <div className="flex justify-end space-x-4 ">
+            <ul className="flex items-center space-x-4 px-2">
               {items.map(({ name, path, onClick }, index) => {
                 // Determine if the current path matches the NavLink's path
                 const isActive = location.pathname === path;
