@@ -9,9 +9,14 @@ const web3 = new Web3(
   )
 );
 
+async function getGasPrice() {
+  const gasPrice = await web3.eth.getGasPrice();
+  return gasPrice;
+}
+
 async function deploy_proof(proof, inputs) {
   const contract = new web3.eth.Contract(contractProofAge.abi);
-
+  const gasPrice = await getGasPrice();
   const signer = web3.eth.accounts.privateKeyToAccount(
     "0x" + "40aa16520f8e31cf6b475924932468c88a08dc736fbc4b788e0ba57bb5c9eed3"
   );
@@ -32,7 +37,7 @@ async function deploy_proof(proof, inputs) {
     .send({
       from: signer.address,
       gas: "4700000",
-      gasPrice: 10000000000,
+      gasPrice: gasPrice,
     });
 
   console.log(deployedContract.options.address);
