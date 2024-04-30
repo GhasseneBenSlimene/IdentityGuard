@@ -180,19 +180,22 @@ const web3 = new Web3(
 function Proof({ proof, isAdult, onVerifyAnother }) {
   return (
     <div>
-      <h2>verification :</h2>
+      <h2>Verification :</h2>
       <h2>{proof}</h2>
-      {isAdult ? (
-        <img src={cochetVert} alt="Accepted" />
-      ) : (
-        <img src={croixRouge} alt="Refused" />
-      )}
-      <br></br>
-      <br></br>
-      <button onClick={onVerifyAnother}>check another client</button>
+      <div className="centered-image">
+        {isAdult ? (
+          <img src={cochetVert} alt="Accepted" />
+        ) : (
+          <img src={croixRouge} alt="Refused" />
+        )}
+      </div>
+      <br />
+      <br />
+      <button onClick={onVerifyAnother}>Check Another Client</button>
     </div>
   );
 }
+
 
 function VerifierPage() {
   const [verifierId, setVerifierId] = useState("");
