@@ -9,8 +9,14 @@ body {
     justify-content: center;
     align-items: center;
   }
- 
+  
+  .centered-image img {
+    max-width: 126px;
+    max-height: 126px;
+  }
 
+  
+  
 .container {
     max-width: 600px;
     margin: 50px auto;
