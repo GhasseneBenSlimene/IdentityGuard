@@ -3,6 +3,7 @@ import { AiFillAppstore } from 'react-icons/ai';
 import { FaMobile, FaGlobe } from 'react-icons/fa';
 import { SiProgress, SiAntdesign } from 'react-icons/si';
 import Title from '../layouts/Title';
+import "./style.css";
 
 const Features = () => {
  return (
@@ -10,12 +11,12 @@ const Features = () => {
       id="features"
       className="w-full py-20 border-b-[1px] border-b-black bg-gray-100"
     >
-      <Title title="Contexte" des="Problème avec les solutions actuelles" />
+      <Title title="" des="Problème avec les solutions actuelles" />
 
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-        <div>
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-8 custom-border">
+        <div >
           <h3 className="text-xl font-bold mb-2">Preuve d'âge centralisée:</h3>
-          <p className="text-gray-700">
+          <p className="text-gray-700 ">
             Les solutions actuelles, comme les cartes d'identité et les permis de conduire, sont centralisées et contrôlées par des gouvernements ou des institutions privées.
           </p>
         </div>
@@ -35,7 +36,7 @@ const Features = () => {
 
       <Title title="" des="Avantages de la technologie ZKP et de la blockchain" />
 
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-8 custom-border">
         <div>
           <h3 className="text-xl font-bold mb-2">Preuve d'âge décentralisée et sécurisée:</h3>
           <p className="text-gray-700">
@@ -58,7 +59,7 @@ const Features = () => {
 
       <Title title="" des="Cas d'utilisation prévus" />
 
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-8 custom-border">
         <div>
           <h3 className="text-xl font-bold mb-2">Vérification de l'âge en ligne:</h3>
           <p className="text-gray-700">

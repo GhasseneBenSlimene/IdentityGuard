@@ -1,0 +1,10 @@
+/* style.css */
+.custom-border {
+    border: 2px solid #091a2c; /* Change the border color to a more vibrant blue */
+    background-color: #dcdedf; /* Add a light background color */
+    border-radius: 0 0 10px 10px; /* Keep the rounded corners */
+    padding: 10px; /* Keep the padding */
+    margin-bottom: 20px; /* Keep the margin */
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Add a subtle shadow for depth */
+   }
+   

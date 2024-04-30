@@ -52,8 +52,9 @@ export default function Register() {
  };
 
  return (
-    <div className="register-container">
+    <div className="register-container pt-64"> {/* Add padding to the top */}
       <form className="register-form" onSubmit={handleRegister}>
+      <h2 className="register-title">Register</h2>
         <Input
           type="text"
           name="name"

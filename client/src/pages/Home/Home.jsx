@@ -10,12 +10,11 @@ import Testimonial from "./components/tesimonial/Testimonial.jsx";
 import Navbar from "../../components/NavBar.jsx";
 export default function Home() {
   return (
-    <div className=" bg-bodyColor  px-4">
+    <div className=" bg-bodyColor  pt-48 px-2">
       <div className="">
         
         <Banner />
         <Features />
-        <FooterBottom/>
       </div>
     </div>
   );

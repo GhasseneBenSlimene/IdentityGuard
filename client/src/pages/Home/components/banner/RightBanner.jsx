@@ -5,7 +5,8 @@ const RightBanner = () => {
   return (
     <div className="w-full lgl:w-1/2 flex flex-col justify-center items-center relative text-black">
       <div>
-        <img src={cover} alt="Cover" />
+      <img src={cover} alt="Cover" className="w-full h-auto" />
+
       </div>
       <div>
 

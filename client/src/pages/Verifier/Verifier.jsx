@@ -317,7 +317,7 @@ function VerifierPage() {
   };
 
   return (
-    <div className="container bg-bodyColor" style={{ minHeight: '100vh' }}>
+    <div className="container bg-bodyColor custom-bg pt-36" style={{ minHeight: '100vh' }}>
       <h1>Vérifier un client</h1>
       {proof ? (
         <Proof proof={proof} onVerifyAnother={handleVerifyAnother} />
@@ -326,13 +326,16 @@ function VerifierPage() {
           <p>Identifiant : {verifierId}</p>
           {showQR && <canvas id="qrcode"></canvas>}
           {!showQR && showGenerateButton && (
-            <button onClick={handleGenerateVerifier}>Générer un identifiant</button>
+            <button onClick={handleGenerateVerifier} 
+            className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">Générer un identifiant</button>
           )}
           {!showQR && !showGenerateButton && (
-            <button onClick={handleShowQR}>Afficher le QR Code</button>
+            <button onClick={handleShowQR}
+            className="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded"
+           >Afficher le QR Code</button>
           )}
           {showQR && (
-            <button onClick={handleHideQR}>Effacer le QR Code</button>
+            <button onClick={handleHideQR}  className="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded">Effacer le QR Code</button>
           )}
         </>
       )}

@@ -7,7 +7,7 @@ import Register from "./pages/Auth/Register";
 import Dashboard from "./pages/Dashboard/Dashboard";
 import AdminDashboard from "./pages/Admin/Dashboard";
 import Verifier_page from "./pages/Verifier/Verifier";
-
+import FooterBottom from "./pages/Home/components/footer/FooterBottom";
 import RefusedDashboard from "./pages/Dashboard/RefusedDashboard";
 
 import { Toaster } from "react-hot-toast";
@@ -28,6 +28,7 @@ function App() {
         <Route path="/admin/dashboard" element={<AdminDashboard />} />
         <Route path="/refusedDashboard" element={<RefusedDashboard />} />
       </Routes>
+      <FooterBottom/>
     </UserContextProvider>
   );
 }

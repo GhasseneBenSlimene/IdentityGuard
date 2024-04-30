@@ -25,6 +25,9 @@ module.exports = {
         primary: "#000000", // Gold for primary elements (optional)
         secondary: "#FFFFFF", // Light coral for secondary elements (optional)
       },
+      backgroundImage: theme => ({
+        'custom-bg': "url('./pages/Verifier/verif.jpeg')",
+      })
     },
   },
   plugins: [],

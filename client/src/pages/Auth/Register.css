@@ -50,7 +50,7 @@
     cursor: pointer;
     font-size: 14px; /* Adjusted font size to make the button smaller */
     transition: background-color 0.3s ease, color 0.3s ease;
-    color: #000000; /* Changed color to make it more attractive */
+    color: #fcf8f8; /* Changed color to make it more attractive */
    }
    
    .file-input-label:hover {
@@ -86,5 +86,26 @@
     background-color: #d4edda;
     color: #155724;
     font-size: 14px;
+   }
+   
+   .register-container {
+    background-image: url('../background.jpeg');
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    min-height: 120vh; /* Ensures the container is at least as tall as the viewport */
+    overflow: auto; /* Allows scrolling if the content overflows */
+    display: flex; /* Use flexbox to center the form vertically */
+    justify-content: center;
+    align-items: center;
+    
+   }
+   
+   .register-form {
+    background-color: rgba(255, 255, 255, 0.8); /* Semi-transparent white */
+    padding: 20px;
+    border-radius: 10px;
+    width: auto; /* Adjust the width as needed */
+    margin: 0 auto; /* Center the form */
    }
    
