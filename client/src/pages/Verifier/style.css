@@ -58,6 +58,6 @@ button:hover {
   justify-content: center;
   align-items: center;
   min-width: full;
-  opacity: 0.99; /* Adjust the transparency level here */
+  opacity: 1; /* Adjust the transparency level here */
   z-index: auto; /* Ensure the background image is behind the content */
 }

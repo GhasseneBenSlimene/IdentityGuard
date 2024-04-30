@@ -11,71 +11,71 @@ const Features = () => {
       id="features"
       className="w-full py-20 border-b-[1px] border-b-black bg-gray-100"
     >
-      <Title title="" des="Problème avec les solutions actuelles" />
+      <Title title="" des="Problem with current solutions" />
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-8 custom-border">
-        <div >
-          <h3 className="text-xl font-bold mb-2">Preuve d'âge centralisée:</h3>
-          <p className="text-gray-700 ">
-            Les solutions actuelles, comme les cartes d'identité et les permis de conduire, sont centralisées et contrôlées par des gouvernements ou des institutions privées.
+        <div>
+          <h3 className="text-xl font-bold mb-2">Centralized age proof:</h3>
+          <p className="text-gray-700">
+            Current solutions, such as ID cards and driving licenses, are centralized and controlled by governments or private institutions.
           </p>
         </div>
         <div>
-          <h3 className="text-xl font-bold mb-2">Risques de sécurité et de confidentialité:</h3>
+          <h3 className="text-xl font-bold mb-2">Security and privacy risks:</h3>
           <p className="text-gray-700">
-            Cela pose des risques de sécurité et de confidentialité, car ces institutions peuvent stocker et partager vos informations personnelles sans votre consentement.
+            This poses security and privacy risks, as these institutions can store and share your personal information without your consent.
           </p>
         </div>
         <div>
-          <h3 className="text-xl font-bold mb-2">Manque de transparence et d'auditabilité:</h3>
+          <h3 className="text-xl font-bold mb-2">Lack of transparency and auditability:</h3>
           <p className="text-gray-700">
-            Il est souvent difficile de vérifier l'authenticité de ces documents, ce qui peut faciliter la fraude et le vol d'identité.
+            It is often difficult to verify the authenticity of these documents, which can facilitate fraud and identity theft.
           </p>
         </div>
       </div>
 
-      <Title title="" des="Avantages de la technologie ZKP et de la blockchain" />
+      <Title title="" des="Advantages of ZKP and blockchain technology" />
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-8 custom-border">
         <div>
-          <h3 className="text-xl font-bold mb-2">Preuve d'âge décentralisée et sécurisée:</h3>
+          <h3 className="text-xl font-bold mb-2">Decentralized and secure age proof:</h3>
           <p className="text-gray-700">
-            ZKP et la blockchain permettent de prouver votre âge sans révéler d'informations sensibles.
+            ZKP and blockchain allow you to prove your age without revealing sensitive information.
           </p>
         </div>
         <div>
-          <h3 className="text-xl font-bold mb-2">Confidentialité et contrôle accru:</h3>
+          <h3 className="text-xl font-bold mb-2">Increased privacy and control:</h3>
           <p className="text-gray-700">
-            Vous conservez le contrôle de vos données et pouvez choisir de les partager uniquement avec les parties de confiance.
+            You retain control of your data and can choose to share it only with trusted parties.
           </p>
         </div>
         <div>
-          <h3 className="text-xl font-bold mb-2">Transparence et auditabilité:</h3>
+          <h3 className="text-xl font-bold mb-2">Transparency and auditability:</h3>
           <p className="text-gray-700">
-            Les transactions sur la blockchain sont transparentes et peuvent être vérifiées par quiconque.
+            Transactions on the blockchain are transparent and can be verified by anyone.
           </p>
         </div>
       </div>
 
-      <Title title="" des="Cas d'utilisation prévus" />
+      <Title title="" des="Planned use cases" />
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-8 custom-border">
         <div>
-          <h3 className="text-xl font-bold mb-2">Vérification de l'âge en ligne:</h3>
+          <h3 className="text-xl font-bold mb-2">Online age verification:</h3>
           <p className="text-gray-700">
-            ZKP et la blockchain peuvent être utilisés pour vérifier l'âge des utilisateurs pour les sites Web et les applications qui exigent une restriction d'âge, comme les jeux d'argent en ligne et les sites de vente de tabac et d'alcool.
+            ZKP and blockchain can be used to verify the age of users for websites and applications that require age restrictions, such as online gambling sites and tobacco and alcohol sales sites.
           </p>
         </div>
         <div>
-          <h3 className="text-xl font-bold mb-2">Vote en ligne:</h3>
+          <h3 className="text-xl font-bold mb-2">Online voting:</h3>
           <p className="text-gray-700">
-            La technologie ZKP peut permettre aux citoyens de voter en ligne de manière sécurisée et anonyme, tout en s'assurant que seuls les éligibles peuvent voter.
+            ZKP technology can allow citizens to vote online securely and anonymously, ensuring that only eligible individuals can vote.
           </p>
         </div>
         <div>
-          <h3 className="text-xl font-bold mb-2">Embauche et inscription à l'école:</h3>
+          <h3 className="text-xl font-bold mb-2">Hiring and school registration:</h3>
           <p className="text-gray-700">
-            Les employeurs et les établissements d'enseignement peuvent utiliser ZKP pour vérifier l'âge des candidats et des étudiants sans avoir à collecter et stocker des informations sensibles.
+            Employers and educational institutions can use ZKP to verify the age of candidates and students without having to collect and store sensitive information.
           </p>
         </div>
       </div>

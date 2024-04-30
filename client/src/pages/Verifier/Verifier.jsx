@@ -5,196 +5,38 @@ import io from "socket.io-client";
 import "./style.css";
 import {Web3} from "web3";
 
-
 const contractProofABI = [
-  {
-    "inputs": [
-      {
-        "internalType": "uint256[]",
-        "name": "_a",
-        "type": "uint256[]"
-      },
-      {
-        "internalType": "uint256[][]",
-        "name": "_b",
-        "type": "uint256[][]"
-      },
-      {
-        "internalType": "uint256[]",
-        "name": "_c",
-        "type": "uint256[]"
-      },
-      {
-        "internalType": "uint256[]",
-        "name": "_inputs",
-        "type": "uint256[]"
-      }
-    ],
-    "stateMutability": "nonpayable",
-    "type": "constructor"
-  },
-  {
-    "inputs": [],
-    "name": "getInputs",
-    "outputs": [
-      {
-        "internalType": "uint256[]",
-        "name": "",
-        "type": "uint256[]"
-      }
-    ],
-    "stateMutability": "view",
-    "type": "function"
-  },
-  {
-    "inputs": [],
-    "name": "getProof",
-    "outputs": [
-      {
-        "components": [
-          {
-            "internalType": "uint256[]",
-            "name": "a",
-            "type": "uint256[]"
-          },
-          {
-            "internalType": "uint256[][]",
-            "name": "b",
-            "type": "uint256[][]"
-          },
-          {
-            "internalType": "uint256[]",
-            "name": "c",
-            "type": "uint256[]"
-          }
-        ],
-        "internalType": "struct ProofContract.Proof",
-        "name": "",
-        "type": "tuple"
-      }
-    ],
-    "stateMutability": "view",
-    "type": "function"
-  },
-  {
-    "inputs": [
-      {
-        "internalType": "uint256",
-        "name": "",
-        "type": "uint256"
-      }
-    ],
-    "name": "inputs",
-    "outputs": [
-      {
-        "internalType": "uint256",
-        "name": "",
-        "type": "uint256"
-      }
-    ],
-    "stateMutability": "view",
-    "type": "function"
-  },
-  {
-    "inputs": [
-      {
-        "internalType": "uint256[]",
-        "name": "_inputs",
-        "type": "uint256[]"
-      }
-    ],
-    "name": "setInputs",
-    "outputs": [],
-    "stateMutability": "nonpayable",
-    "type": "function"
-  },
-  {
-    "inputs": [
-      {
-        "internalType": "uint256[]",
-        "name": "_a",
-        "type": "uint256[]"
-      },
-      {
-        "internalType": "uint256[][]",
-        "name": "_b",
-        "type": "uint256[][]"
-      },
-      {
-        "internalType": "uint256[]",
-        "name": "_c",
-        "type": "uint256[]"
-      }
-    ],
-    "name": "setProof",
-    "outputs": [],
-    "stateMutability": "nonpayable",
-    "type": "function"
-  }
+ // ABI for the proof contract
 ];
 
 const contractVerifABI = [
-  {
-    "inputs": [
-      {
-        "internalType": "uint256[2]",
-        "name": "_pA",
-        "type": "uint256[2]"
-      },
-      {
-        "internalType": "uint256[2][2]",
-        "name": "_pB",
-        "type": "uint256[2][2]"
-      },
-      {
-        "internalType": "uint256[2]",
-        "name": "_pC",
-        "type": "uint256[2]"
-      },
-      {
-        "internalType": "uint256[2]",
-        "name": "_pubSignals",
-        "type": "uint256[2]"
-      }
-    ],
-    "name": "verifyProof",
-    "outputs": [
-      {
-        "internalType": "bool",
-        "name": "",
-        "type": "bool"
-      }
-    ],
-    "stateMutability": "view",
-    "type": "function"
-  }
+ // ABI for the verification contract
 ];
 
 const web3 = new Web3(
-  new Web3.providers.HttpProvider(
+ new Web3.providers.HttpProvider(
     `https://sepolia.infura.io/v3/41236084bd704280905e270666af92ff`,
-  ),
+ ),
 );
 
-
 function Proof({ proof, onVerifyAnother }) {
-  return (
+ return (
     <div>
-      <h2>Preuve reçue :</h2>
+      <h2>Received Proof:</h2>
       <p>{proof}</p>
-      <button onClick={onVerifyAnother}>Vérifier un autre client</button>
+      <button onClick={onVerifyAnother}>Verify another client</button>
     </div>
-  );
+ );
 }
 
 function VerifierPage() {
-  const [verifierId, setVerifierId] = useState("");
-  const [proof, setProof] = useState(null);
-  const [socket, setSocket] = useState(null);
-  const [showQR, setShowQR] = useState(false);
-  const [showGenerateButton, setShowGenerateButton] = useState(false);
+ const [verifierId, setVerifierId] = useState("");
+ const [proof, setProof] = useState(null);
+ const [socket, setSocket] = useState(null);
+ const [showQR, setShowQR] = useState(false);
+ const [showGenerateButton, setShowGenerateButton] = useState(false);
 
-  useEffect(() => {
+ useEffect(() => {
     const fetchVerifier = async () => {
       const storedVerifierId = localStorage.getItem("verifierId");
       if (storedVerifierId) {
@@ -208,19 +50,19 @@ function VerifierPage() {
             setShowGenerateButton(false);
           }
         } catch (error) {
-          console.error("Erreur lors de la requête Axios :", error);
-          // Gérer l'erreur selon vos besoins
+          console.error("Error during Axios request:", error);
+          // Handle the error as needed
         }
       } else {
         setShowGenerateButton(true);
       }
     };
   
-    fetchVerifier(); // Appel de la fonction pour récupérer le vérificateur
-  }, [verifierId]);
+    fetchVerifier(); // Call the function to retrieve the verifier
+ }, [verifierId]);
   
 
-  useEffect(() => {
+ useEffect(() => {
     if (verifierId) {
       const newSocket = io(import.meta.env.VITE_API_URL + import.meta.env.VITE_SOCKET_PORT);
       setSocket(newSocket);
@@ -236,35 +78,34 @@ function VerifierPage() {
         const address_verif = "0x1d50c589c9B16a8459fA3BCf278428991C8E7fDb";
         const contractVerif = new web3.eth.Contract(contractVerifABI, address_verif);
 
-
         //const verif = await contractVerif.methods.verifyProof(proofa, proofb, proofc, inputs).call();
         //console.log(verif);
-    if(true){
-        if(inputs[0] == 1){
-            const proofData = "la verification est valide";
-            setProof(proofData);
-        }else{
-            const proofData = "l'age est inferieur à 18 ans";
-            setProof(proofData);
+        if(true){
+            if(inputs[0] == 1){
+                const proofData = "The verification is valid";
+                setProof(proofData);
+            }else{
+                const proofData = "The age is less than 18 years";
+                setProof(proofData);
+            }
+        } else {
+            console.log("The proof is incorrect");
         }
-    } else {
-        console.log("la preuve est incorrecte");
-    }
       });
 
       return () => {
         newSocket.disconnect();
       };
     }
-  }, [verifierId]);
+ }, [verifierId]);
 
-  useEffect(() => {
+ useEffect(() => {
     if (showQR && verifierId) {
       generateQR(verifierId);
     }
-  }, [showQR, verifierId]);
+ }, [showQR, verifierId]);
 
-  const generateNewVerifier = async () => {
+ const generateNewVerifier = async () => {
     try {
       const response = await axios.post("/verifiers");
       if (response.status === 201) {
@@ -276,16 +117,16 @@ function VerifierPage() {
         setShowGenerateButton(false);
       } else {
         throw new Error(
-          "Erreur lors de la création de l'objet vérificateur: " +
+          "Error during the creation of the verifier object: " +
             response.status
         );
       }
     } catch (error) {
-      console.error("Erreur lors de la création du vérificateur:", error);
+      console.error("Error during the creation of the verifier:", error);
     }
-  };
+ };
 
-  const generateQR = (verifierId) => {
+ const generateQR = (verifierId) => {
     try {
       var qrCodeCanvas = document.getElementById("qrcode");
       new QRious({
@@ -294,53 +135,53 @@ function VerifierPage() {
         size: 300,
       });
     } catch (error) {
-      console.error("Erreur lors de la génération du QR code:", error);
+      console.error("Error during the generation of the QR code:", error);
     }
-  };
+ };
 
-  const handleShowQR = () => {
+ const handleShowQR = () => {
     setShowQR(true);
-  };
+ };
 
-  const handleHideQR = () => {
+ const handleHideQR = () => {
     setShowQR(false);
-  };
+ };
 
-  const handleVerifyAnother = () => {
+ const handleVerifyAnother = () => {
     setShowQR(false);
     setProof(null);
-  };
+ };
 
-  const handleGenerateVerifier = () => {
+ const handleGenerateVerifier = () => {
     generateNewVerifier();
-    setShowGenerateButton(false); // Cacher le bouton générer une fois que l'identifiant est généré
-  };
+    setShowGenerateButton(false); // Hide the generate button once the identifier is generated
+ };
 
-  return (
+ return (
     <div className="container bg-bodyColor custom-bg pt-72" style={{ minHeight: '100vh' }}>
-      <h1 className="content">Vérifier un client</h1>
+      <h1 className="content">Verify a client</h1>
       {proof ? (
         <Proof proof={proof} onVerifyAnother={handleVerifyAnother} />
       ) : (
         <>
-          <p className="content">Identifiant : {verifierId}</p>
+          <p className="content">Identifier: {verifierId}</p>
           {showQR && <canvas id="qrcode"></canvas>}
           {!showQR && showGenerateButton && (
             <button onClick={handleGenerateVerifier} 
-            className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded content">Générer un identifiant</button>
+            className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded content">Generate an identifier</button>
           )}
           {!showQR && !showGenerateButton && (
             <button onClick={handleShowQR}
             className="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded content"
-           >Afficher le QR Code</button>
+           >Show QR Code</button>
           )}
           {showQR && (
-            <button onClick={handleHideQR}  className="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded content">Effacer le QR Code</button>
+            <button onClick={handleHideQR} className="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded content">Clear QR Code</button>
           )}
         </>
       )}
     </div>
-  );
+ );
 }
 
 export default VerifierPage;
