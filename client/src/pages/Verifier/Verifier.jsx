@@ -181,7 +181,6 @@ function Proof({ proof, isAdult, onVerifyAnother }) {
   return (
     <div>
       <h2>Verification :</h2>
-      <h2>{proof}</h2>
       <div className="centered-image">
         {isAdult ? (
           <img src={cochetVert} alt="Accepted" />
@@ -190,13 +189,12 @@ function Proof({ proof, isAdult, onVerifyAnother }) {
         )}
       </div>
       <br />
+      <h2>{proof}</h2>
       <br />
       <button onClick={onVerifyAnother}>Check Another Client</button>
     </div>
   );
 }
-
-
 function VerifierPage() {
   const [verifierId, setVerifierId] = useState("");
   const [proof, setProof] = useState(null);
@@ -219,15 +217,15 @@ function VerifierPage() {
             setShowGenerateButton(false);
           }
         } catch (error) {
-          console.error("Erreur lors de la requête Axios :", error);
-          // Gérer l'erreur selon vos besoins
+          console.error("Error during Axios request:", error);
+          // Handle the error as needed
         }
       } else {
         setShowGenerateButton(true);
       }
     };
 
-    fetchVerifier(); // Appel de la fonction pour récupérer le vérificateur
+    fetchVerifier(); // Call the function to fetch the verifier
   }, [verifierId]);
 
   useEffect(() => {
@@ -253,11 +251,11 @@ function VerifierPage() {
         //console.log(verif);
         if (true) {
           if (inputs[0] == 1) {
-            setProof("major");
+            setProof("Adult");
             setIsAdult(true);
           } else {
             setIsAdult(false);
-            setProof("minor");
+            setProof("Minor");
           }
         } else {
           console.log("the proof is not valid");
@@ -288,12 +286,11 @@ function VerifierPage() {
         setShowGenerateButton(false);
       } else {
         throw new Error(
-          "Erreur lors de la création de l'objet vérificateur: " +
-            response.status
+          "Error during the creation of the verifier object: " + response.status
         );
       }
     } catch (error) {
-      console.error("Erreur lors de la création du vérificateur:", error);
+      console.error("Error during the creation of the verifier:", error);
     }
   };
 
@@ -306,7 +303,7 @@ function VerifierPage() {
         size: 300,
       });
     } catch (error) {
-      console.error("Erreur lors de la génération du QR code:", error);
+      console.error("Error during the generation of the QR code:", error);
     }
   };
 
@@ -325,31 +322,45 @@ function VerifierPage() {
 
   const handleGenerateVerifier = () => {
     generateNewVerifier();
-    setShowGenerateButton(false); // Cacher le bouton générer une fois que l'identifiant est généré
+    setShowGenerateButton(false); // Hide the generate button once the identifier is generated
   };
 
   return (
-    <div className="container bg-bodyColor" style={{ minHeight: "100vh" }}>
-      <h1>Vérifier un client</h1>
+    <div
+      className="container bg-bodyColor custom-bg pt-26"
+      style={{ minHeight: "100vh" }}
+    >
+      <h1 className="content">Verify a client</h1>
       {proof ? (
-        <Proof
-          proof={proof}
-          isAdult={isAdult}
-          onVerifyAnother={handleVerifyAnother}
-        />
+        <Proof proof={proof} onVerifyAnother={handleVerifyAnother} />
       ) : (
         <>
-          <p>Identifiant : {verifierId}</p>
+          <p className="content">Identifier: {verifierId}</p>
           {showQR && <canvas id="qrcode"></canvas>}
           {!showQR && showGenerateButton && (
-            <button onClick={handleGenerateVerifier}>
-              Générer un identifiant
+            <button
+              onClick={handleGenerateVerifier}
+              className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded content"
+            >
+              Generate an identifier
             </button>
           )}
           {!showQR && !showGenerateButton && (
-            <button onClick={handleShowQR}>Afficher le QR Code</button>
+            <button
+              onClick={handleShowQR}
+              className="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded content"
+            >
+              Show QR Code
+            </button>
           )}
-          {showQR && <button onClick={handleHideQR}>Effacer le QR Code</button>}
+          {showQR && (
+            <button
+              onClick={handleHideQR}
+              className="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded content"
+            >
+              Clear QR Code
+            </button>
+          )}
         </>
       )}
     </div>
