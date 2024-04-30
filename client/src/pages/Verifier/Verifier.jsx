@@ -4,6 +4,8 @@ import axios from "axios";
 import io from "socket.io-client";
 import "./style.css";
 import { Web3 } from "web3";
+import cochetVert from "../img/accept.png";
+import croixRouge from "../img/refuse.png";
 
 const contractProofABI = [
   {
@@ -175,12 +177,19 @@ const web3 = new Web3(
   )
 );
 
-function Proof({ proof, onVerifyAnother }) {
+function Proof({ proof, isAdult, onVerifyAnother }) {
   return (
     <div>
-      <h2>Preuve reçue :</h2>
-      <p>{proof}</p>
-      <button onClick={onVerifyAnother}>Vérifier un autre client</button>
+      <h2>verification :</h2>
+      <h2>{proof}</h2>
+      {isAdult ? (
+        <img src={cochetVert} alt="Accepted" />
+      ) : (
+        <img src={croixRouge} alt="Refused" />
+      )}
+      <br></br>
+      <br></br>
+      <button onClick={onVerifyAnother}>check another client</button>
     </div>
   );
 }
@@ -191,6 +200,7 @@ function VerifierPage() {
   const [socket, setSocket] = useState(null);
   const [showQR, setShowQR] = useState(false);
   const [showGenerateButton, setShowGenerateButton] = useState(false);
+  const [isAdult, setIsAdult] = useState(false);
 
   useEffect(() => {
     const fetchVerifier = async () => {
@@ -240,14 +250,14 @@ function VerifierPage() {
         //console.log(verif);
         if (true) {
           if (inputs[0] == 1) {
-            const proofData = "la verification est valide";
-            setProof(proofData);
+            setProof("major");
+            setIsAdult(true);
           } else {
-            const proofData = "l'age est inferieur à 18 ans";
-            setProof(proofData);
+            setIsAdult(false);
+            setProof("minor");
           }
         } else {
-          console.log("la preuve est incorrecte");
+          console.log("the proof is not valid");
         }
       });
 
@@ -316,10 +326,14 @@ function VerifierPage() {
   };
 
   return (
-    <div className="container bg-bodyColor" style={{ minHeight: '100vh' }}>
+    <div className="container bg-bodyColor" style={{ minHeight: "100vh" }}>
       <h1>Vérifier un client</h1>
       {proof ? (
-        <Proof proof={proof} onVerifyAnother={handleVerifyAnother} />
+        <Proof
+          proof={proof}
+          isAdult={isAdult}
+          onVerifyAnother={handleVerifyAnother}
+        />
       ) : (
         <>
           <p>Identifiant : {verifierId}</p>
