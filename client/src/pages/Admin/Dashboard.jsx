@@ -108,7 +108,7 @@ export default function AdminDashboard() {
 
   return (
     <>
-      <div className="container dashboardContainer">
+      <div className="container dashboardContainer mt-48">
         {users.map((user) => (
           <div className="dashboardCard" key={user.email}>
             <img

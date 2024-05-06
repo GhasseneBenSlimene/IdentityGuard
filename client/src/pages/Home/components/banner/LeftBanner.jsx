@@ -6,9 +6,9 @@ import { SiTailwindcss, SiFigma, SiNextdotjs } from "react-icons/si";
 const LeftBanner = () => {
   const [text] = useTypewriter({
     words: [
-      "Protégez vos données.",
-      "Prouvez votre âge sans la divulguer.",
-      "Votez en  gardant votre anonymat.",
+      "Protect your data.",
+      "Prove your age without disclosing it.",
+      "Vote while maintaining anonymity.",
     ],
     loop: true,
     typeSpeed: 20,
@@ -20,8 +20,9 @@ const LeftBanner = () => {
       <div className="flex flex-col gap-5">
       
         <h1 className="text-6xl font-bold text-black">
-          Avec la technologie{" "}
-          <span className="text-designColor capitalize">ZKP</span>
+          With the {" "}
+          <span className="text-designColor capitalize">ZKP </span>
+          technology
         </h1>
         <h2 className="text-4xl font-bold text-black">
           <span>{text}</span>

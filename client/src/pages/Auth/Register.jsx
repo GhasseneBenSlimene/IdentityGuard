@@ -1,20 +1,20 @@
 import { useState } from "react";
 import { registerUser } from "./utils/auth";
 import { Input } from "../../components/Input";
-import './Register.css'; // Import the custom CSS file
+import "./Register.css"; // Import the custom CSS file
 
 export default function Register() {
- const [isRegistered, setIsRegistered] = useState(false);
- const [data, setData] = useState({
+  const [isRegistered, setIsRegistered] = useState(false);
+  const [data, setData] = useState({
     name: "",
     email: "",
     password: "",
     image: "",
- });
- const [fileName, setFileName] = useState(""); // Added to store the file name
- const [imagePreview, setImagePreview] = useState(""); // State to hold the preview URL
+  });
+  const [fileName, setFileName] = useState(""); // Added to store the file name
+  const [imagePreview, setImagePreview] = useState(""); // State to hold the preview URL
 
- const handleRegister = async (e) => {
+  const handleRegister = async (e) => {
     e.preventDefault(); // Added to prevent page reload
     if (await registerUser(e, data)) {
       setData({
@@ -27,9 +27,9 @@ export default function Register() {
       setImagePreview(false);
       setIsRegistered(true);
     }
- };
+  };
 
- const handleChange = (e) => {
+  const handleChange = (e) => {
     const { name, value, files } = e.target;
     if (name === "image") {
       const file = files[0];
@@ -49,11 +49,14 @@ export default function Register() {
     } else {
       setData({ ...data, [name]: value });
     }
- };
+  };
 
- return (
-    <div className="register-container">
+  return (
+    <div className="register-container pt-24">
+      {" "}
+      {/* Add padding to the top */}
       <form className="register-form" onSubmit={handleRegister}>
+        <h2 className="register-title">Register</h2>
         <Input
           type="text"
           name="name"
@@ -75,6 +78,7 @@ export default function Register() {
           value={data.password}
           onChange={handleChange}
         />
+        Upload an ID card
         <div className="file-input-container mt-3">
           <input
             type="file"
@@ -85,7 +89,7 @@ export default function Register() {
             onChange={handleChange}
           />
           <label htmlFor="image" className="file-input-label text-center">
-            {fileName ? "Fichier téléchargé ✅" : "Choisir un fichier"}
+            {fileName ? "File uploaded ✅" : "Chose a file"}
           </label>
         </div>
         {imagePreview && ( // Display image preview if available
@@ -104,10 +108,12 @@ export default function Register() {
         </button>
         {isRegistered && (
           <div className="register-alert mt-3" role="alert">
-            Congratulations on successfully registering! An administrator will review your information shortly. Once approved, you can then log in to your account. Thank you for your patience.
+            Congratulations on successfully registering! An administrator will
+            review your information shortly. Once approved, you can then log in
+            to your account. Thank you for your patience.
           </div>
         )}
       </form>
     </div>
- );
+  );
 }

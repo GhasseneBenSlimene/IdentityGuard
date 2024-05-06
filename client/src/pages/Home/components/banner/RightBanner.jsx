@@ -1,20 +1,21 @@
 import React from 'react';
 import { cover } from "../../assets/index";
+import "../features/style.css"
 
 const RightBanner = () => {
   return (
-    <div className="w-full lgl:w-1/2 flex flex-col justify-center items-center relative text-black">
+    <div className="w-full lgl:w-1/2 flex flex-col justify-center items-center relative text-black pt-12">
       <div>
-        <img src={cover} alt="Cover" />
-      </div>
-      <div>
+      <img src={cover} alt="Cover" className="w-full h-auto pb-10 " />
 
-      <br></br>
-      <br></br>
-      <br></br>
-
-        Ce projet développe un système utilisant la cryptographie à preuve à divulgation nulle de connaissance (ZKP) pour prouver de manière sécurisée et confidentielle que l'âge d'une personne est supérieur à 18 ans, sans révéler d'autres informations personnelles. La preuve cryptographique générée est ensuite déployée sur la blockchain, offrant une solution de vérification d'identité respectueuse de la vie privée via deux interfaces utilisateur distinctes pour le demandeur et le vérificateur.
       </div>
+      <div className='custom-border '>
+
+      
+      
+      
+
+      This project is developing a system that uses zero-knowledge proof (ZKP) cryptography to securely and confidentially prove that a person’s age is over 18, without revealing any other personal information. The cryptographic proof generated is then deployed on the blockchain, providing a privacy-respecting identity verification solution via two separate user interfaces for the applicant and the verifier.      </div>
     </div>
   );
 }

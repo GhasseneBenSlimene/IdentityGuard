@@ -19,8 +19,7 @@ export default function Dashboard() {
   const videoRef = useRef(null);
 
   if (loading) return <h1>Loading...</h1>;
-  if (!user) return <div>Please log in.</div>;
-
+  
   const handleProofOfAge = () => {
     setShowAgeProofOptions(true);
   };
@@ -146,13 +145,13 @@ export default function Dashboard() {
     }
   }
 
-  if (!user) {
-    return (
-      <div className="alert alert-danger justify-content-center" role="alert">
-        You must be logged in to view this page.
-      </div>
-    );
-  }
+  // if (!user) {
+  //   return (
+  //     <div className="alert alert-danger justify-content-center" role="alert">
+  //       You must be logged in to view this page.
+  //     </div>
+  //   );
+  // }
 
   return (
     <div className="container  bg-bodyColor">
