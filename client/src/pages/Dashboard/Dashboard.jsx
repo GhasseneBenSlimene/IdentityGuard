@@ -36,10 +36,10 @@ export default function Dashboard() {
           };
           socket.emit("message", data);
           console.log("envoyé");
-          setErrorMessage("Données envoyées");
+          setErrorMessage("Data sent");
           setScannedQrCode("");
         } else {
-          setErrorMessage("Identifiant incorrect, veuillez recommencer");
+          setErrorMessage("Incorrect identifier, please try again");
         }
       } catch (error) {
         console.error("Erreur lors de la requête Axios :", error);
@@ -157,7 +157,7 @@ export default function Dashboard() {
     <div className="container  bg-bodyColor mt-48">
       <h1>Welcome to your dashboard, {user && user.name}</h1>
       {!showAgeProofOptions && (
-        <button onClick={handleProofOfAge}>Prouver mon âge</button>
+        <button onClick={handleProofOfAge}>Prove my age</button>
       )}
       {showAgeProofOptions && (
         <>
@@ -169,14 +169,14 @@ export default function Dashboard() {
                 setScannedQrCode("");
               }}
             >
-              Scanner le QR code
+              Scan QR code
             </button>
             <button
               onClick={() => {
                 setMethod("input");
               }}
             >
-              Entrer le QR code
+              Enter QR code
             </button>
           </div>
           <div id="message" className="error-message">
@@ -191,12 +191,12 @@ export default function Dashboard() {
               type="text"
               value={identifier}
               onChange={(e) => setIdentifier(e.target.value)}
-              placeholder="Entrer l'identifiant"
+              placeholder="Enter identifier"
               className="identifier-input"
             />
             {identifier && method === "input" && (
               <button onClick={handleSaveIdentifier} className="send-button">
-                Envoyer
+                Send
               </button>
             )}
           </div>
@@ -204,12 +204,12 @@ export default function Dashboard() {
       )}
       {method === "camera" && scannedQrCode && (
         <button onClick={handleSaveIdentifier} className="send-button">
-          Envoyer
+          Send
         </button>
       )}
       {!isCameraAvailable && method === "camera" && (
         <p className="error-message">
-          Veuillez autoriser l'accès à la caméra ou choisir une autre méthode.
+          Please allow camera access or choose another method.
         </p>
       )}
       {isCameraAvailable && method === "camera" && (
@@ -218,7 +218,7 @@ export default function Dashboard() {
         </div>
       )}
       {method === "camera" && scannedQrCode && (
-        <p> QR Code scanné : {scannedQrCode}</p>
+        <p> Scanned QR Code: {scannedQrCode}</p>
       )}
     </div>
   );
