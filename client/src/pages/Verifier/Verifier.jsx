@@ -332,7 +332,11 @@ function VerifierPage() {
     >
       <h1 className="content">Verify a client</h1>
       {proof ? (
-        <Proof proof={proof} onVerifyAnother={handleVerifyAnother} />
+        <Proof
+          proof={proof}
+          isAdult={isAdult}
+          onVerifyAnother={handleVerifyAnother}
+        />
       ) : (
         <>
           <p className="content">Identifier: {verifierId}</p>
