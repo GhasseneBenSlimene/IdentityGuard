@@ -182,7 +182,7 @@ function Proof({ proof, isAdult, onVerifyAnother }) {
     <div>
       <h2>Verification :</h2>
       <div className="centered-image">
-        {isAdult ? (
+        {proof === "Adult" ? (
           <img src={cochetVert} alt="Accepted" />
         ) : (
           <img src={croixRouge} alt="Refused" />
