@@ -19,7 +19,7 @@ export default function Dashboard() {
   const videoRef = useRef(null);
 
   if (loading) return <h1>Loading...</h1>;
-  
+
   const handleProofOfAge = () => {
     setShowAgeProofOptions(true);
   };
@@ -154,7 +154,7 @@ export default function Dashboard() {
   // }
 
   return (
-    <div className="container  bg-bodyColor">
+    <div className="container  bg-bodyColor mt-48">
       <h1>Welcome to your dashboard, {user && user.name}</h1>
       {!showAgeProofOptions && (
         <button onClick={handleProofOfAge}>Prouver mon âge</button>
