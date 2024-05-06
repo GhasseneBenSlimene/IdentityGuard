@@ -76,7 +76,7 @@ const RefusedDashboard = () => {
   }
 
   return (
-    <div className="container mt-4  bg-bodyColor">
+    <div className="container mt-48  bg-bodyColor">
       <div className="alert alert-danger" role="alert">
         Hello {user.name}
         <br />
