@@ -7,8 +7,8 @@ const LeftBanner = () => {
   const [text] = useTypewriter({
     words: [
       "Protect your data.",
-      "Prove your age without disclosing it.",
-      "Vote while maintaining anonymity.",
+      "Prove age without disclosure.",
+      "Avoid people judging you.",
     ],
     loop: true,
     typeSpeed: 20,
@@ -16,7 +16,7 @@ const LeftBanner = () => {
     delaySpeed: 2000,
   });
   return (
-    <div className="w-full lgl:w-3/5 flex flex-col gap-20">
+    <div className="-full lgl:w-3/5 flex flex-col gap-20">
       <div className="flex flex-col gap-5">
       
         <h1 className="text-6xl font-bold text-black">
@@ -24,7 +24,7 @@ const LeftBanner = () => {
           <span className="text-designColor capitalize">ZKP </span>
           technology
         </h1>
-        <h2 className="text-4xl font-bold text-black">
+        <h2 className="text-4xl font-bold text-black min-w-full min-h-20 flex-shrink-0">
           <span>{text}</span>
           <Cursor
             cursorBlinking="false"
